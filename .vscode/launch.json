@@ -1,7 +1,4 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
@@ -16,19 +13,17 @@
       "type": "node",
       "request": "launch",
       "name": "Debug Jest Tests",
-      "program": "node_modules/.bin/jest",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       "args": ["--runInBand", "--testPathPattern=game.test.js"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
       "skipFiles": [
         "<node_internals>/**",
-        "battleship-game/node_modules/**",
-        "!battleship-game/src/**"
-      ],
-
-      "windows": {
-        "program": "battleship-game/node_modules/jest/bin/jest"
-      }
+        "**/node_modules/**",
+        "!**/node_modules/lodash/**",
+        "!**/battleship-game/src/**"
+      ]
     }
   ]
 }
