@@ -6,6 +6,30 @@
     <title>Document</title>
   </head>
   <body>
-    <div>Test</div>
+    <div class="game-container">
+      <!-- Game background image -->
+      <div class="full-size-image-container">
+        <img
+          src="./images/loading.png"
+          alt="Game Background"
+          class="full-size-image"
+        />
+      </div>
+
+      <!-- Loading bar (positioned at lower middle) -->
+      <div class="loading-container">
+        <div class="loading-bar-container">
+          <div class="loading-bar"></div>
+        </div>
+        <div class="loading-text">
+          Loading: <span class="loading-percentage">0%</span>
+        </div>
+      </div>
+
+      <!-- Start button (hidden initially, will replace loading bar) -->
+      <div class="start-button-container">
+        <button class="start-button">Start Game</button>
+      </div>
+    </div>
   </body>
 </html>
