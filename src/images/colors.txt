@@ -1,0 +1,6 @@
+Bright Theme:
+#2E90A6
+#52D9D9
+#F2CD5E
+#F29544
+#F28241
