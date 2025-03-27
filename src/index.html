@@ -8,7 +8,7 @@
   <body>
     <div class="game-container">
       <!-- Game background image -->
-      <div class="full-size-image-container">
+      <div class="full-size-image-container" id="background-container">
         <img
           src="./images/loading.png"
           alt="Game Background"
@@ -30,6 +30,13 @@
       <div class="start-button-container">
         <button class="start-button">Start Game</button>
       </div>
+      <dialog id="name-dialog">
+        <fieldset id="name-fieldset" method="dialog">
+          <button type="button" id="cancel-name">X</button>
+          <label for="player-name">Enter your name</label>
+          <input type="text" id="player-name" autofocus />
+        </fieldset>
+      </dialog>
     </div>
   </body>
 </html>

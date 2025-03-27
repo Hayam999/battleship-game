@@ -1,12 +1,21 @@
 import "./style.css";
+import { controlGameFlow } from "./game-flow";
+import { getShipsPoses } from "./place-ships";
+
+const startButtonContainer = document.querySelector(".start-button-container");
+const startBtn = document.querySelector(".start-button");
+const backgroundDiv = document.getElementById("background-container");
+startBtn.addEventListener("click", function () {
+  // Start your game logic here
+  startGame();
+  startBtn.style.display = "none";
+  // Initialize your game
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   const loadingBar = document.querySelector(".loading-bar");
   const loadingPercentage = document.querySelector(".loading-percentage");
   const loadingContainer = document.querySelector(".loading-container");
-  const startButtonContainer = document.querySelector(
-    ".start-button-container",
-  );
 
   // Simulate loading (replace with your actual asset loading logic)
   let progress = 0;
@@ -37,13 +46,50 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 200);
 
   // Start button click handler
-  document
-    .querySelector(".start-button")
-    .addEventListener("click", function () {
-      // Start your game logic here
-      console.log("Game started!");
-      this.disabled = true;
-      startButtonContainer.style.opacity = "0";
-      // Initialize your game
-    });
 });
+
+async function startGame() {
+  const playerName = await getPlayerName();
+
+  if (playerName) {
+    backgroundDiv.remove();
+    startBtn.remove();
+    const positions = await getShipsPoses();
+    controlGameFlow(positions);
+  } else {
+    waitToStart();
+  }
+}
+
+function waitToStart() {
+  startBtn.style.display = "block";
+  backgroundDiv.style.display = "flex";
+  document.body.style.backgroundColor = "#ffffff";
+}
+
+async function getPlayerName() {
+  return new Promise((resolve) => {
+    const nameDialog = document.getElementById("name-dialog");
+    const cancelNamebtn = document.getElementById("cancel-name");
+    const inputField = document.getElementById("player-name");
+    backgroundDiv.style.display = "none";
+    document.body.style.backgroundColor = "#2E90A6";
+    nameDialog.showModal();
+    cancelNamebtn.addEventListener("click", () => {
+      inputField.value = "";
+      nameDialog.close();
+      resolve(null);
+    });
+    inputField.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const value = inputField.value;
+        inputField.value = "";
+        nameDialog.close();
+        resolve(value);
+      }
+    });
+  });
+}
+
+export { startGame, getPlayerName };
