@@ -74,6 +74,7 @@ function GameBoard() {
     let cruiser = Ship("Cruiser", 3);
     let submarine = Ship("Submarine", 3);
     let destroy = Ship("Destroy", 2);
+
     return {
       carrier: carrier,
       battleship: battleship,
