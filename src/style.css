@@ -1,3 +1,7 @@
+:root {
+  --cell-size: 60px;
+  --cell-gap: 10px;
+}
 /* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,
@@ -225,4 +229,38 @@ button#cancel-name {
 
 button#cancel-name:hover {
   background-color: #2e90a6;
+}
+
+/* TODO style #place-ships-div*/
+
+#place-ships-div {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.gameBoard {
+  display: grid;
+  grid-template-columns: repeat(11, var(--cell-size));
+  grid-template-rows: repeat(11, var(--cell-size));
+  gap: var(--cell-gap);
+  border-radius: 10px;
+}
+
+.cell {
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: antiquewhite;
+  box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.822);
+}
+
+.numeric-cell {
+  text-align: center;
+  border: none;
+  gap: none;
+}
+
+.shipContainer {
+  gap: 10px;
+  border-radius: 10px;
 }
