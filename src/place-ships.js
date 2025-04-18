@@ -1,4 +1,8 @@
-import { createShips } from "./create-ui.js";
+import {
+  createShips,
+  createGameBoard,
+  createPlacingShipsRules,
+} from "./create-ui.js";
 
 const HEIGHT = 20;
 const WIDTH = 50;
@@ -20,40 +24,38 @@ async function getShipsPoses() {
 // TODO design ui for the user to place their ships
 
 function initUI() {
+  // TODO add game rules to placeShipsDiv
+  // TODO style placeShipsDiv
   const placeShipsDiv = document.createElement("div");
   placeShipsDiv.id = "place-ships-div";
 
-  // Creating the visual GameBoard
-  const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-  const gameBoard = document.createElement("div");
-  gameBoard.id = "placing-gameBoard";
-  gameBoard.className = "gameBoard";
+  // GameBoard Section
+  const gameBoardWrapper = document.createElement("div");
+  const gameBoardHeader = document.createElement("h3");
+  gameBoardHeader.innerText = "Game Board";
+  const gameBoard = createGameBoard();
+  gameBoardWrapper.append(gameBoardHeader, gameBoard);
 
-  // First, create all the cell elements and append them to gameBoard
-  for (let i = 0; i <= 10; i++) {
-    for (let j = 0; j <= 10; j++) {
-      const index = i * 11 + j;
-      const cell = document.createElement("div");
-      cell.id = "cell" + index;
-      // check if it's an appropriate cell to label with a letter
-      if (j === 0) {
-        if (i != 0) {
-          cell.innerText = letters[i - 1];
-        }
-        cell.classList.add("numeric-cell");
-      } else if (i === 0) {
-        if (j != 0) {
-          cell.innerText = j;
-        }
-        cell.classList.add("numeric-cell");
-      } else {
-        cell.classList.add("cell");
-      }
-      gameBoard.appendChild(cell);
-    }
-  }
+  // Rules And Ships Section
+  const shipsAndRulesWrapper = document.createElement("div");
+
+  // Rules Section
+  const rulesWrapper = document.createElement("div");
+  const rulesHeader = document.createElement("h6");
+  rulesHeader.innerText = "Drag and Drop each Ship into the Game Board";
+  const rules = createPlacingShipsRules();
+  rulesWrapper.append(rulesHeader, rules);
+
+  // Ships Section
+  const shipsWrapper = document.createElement("div");
+  const shipsHeader = document.createElement("h3");
+  shipsHeader.innerText = "Ships";
   const ships = createShips();
-  placeShipsDiv.append(gameBoard, ships);
+  shipsWrapper.append(shipsHeader, ships);
+
+  shipsAndRulesWrapper.append(rulesWrapper, shipsWrapper);
+
+  placeShipsDiv.append(gameBoardWrapper, shipsAndRulesWrapper);
   document.body.appendChild(placeShipsDiv);
 }
 

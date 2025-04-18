@@ -120,3 +120,51 @@ function drawCell(cell, direction) {
   }
   cell.appendChild(canvas);
 }
+
+export function createGameBoard() {
+  // Creating the visual GameBoard
+  const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+  const gameBoard = document.createElement("div");
+
+  gameBoard.className = "gameBoard";
+
+  // First, create all the cell elements and append them to gameBoard
+  for (let i = 0; i <= 10; i++) {
+    for (let j = 0; j <= 10; j++) {
+      const index = i * 11 + j;
+      const cell = document.createElement("div");
+      cell.id = "cell" + index;
+      // check if it's an appropriate cell to label with a letter
+      if (j === 0) {
+        if (i != 0) {
+          cell.innerText = letters[i - 1];
+        }
+        cell.classList.add("numeric-cell");
+      } else if (i === 0) {
+        if (j != 0) {
+          cell.innerText = j;
+        }
+        cell.classList.add("numeric-cell");
+      } else {
+        cell.classList.add("cell");
+      }
+      gameBoard.appendChild(cell);
+    }
+  }
+  return gameBoard;
+}
+
+export function createPlacingShipsRules() {
+  const rulesDiv = document.createElement("div");
+  rulesDiv.className = "rulesDiv";
+
+  const header = document.createElement("h3");
+  header.textContent = "Game";
+  return rulesDiv;
+}
+
+export function createGameRules() {
+  const gameRules = document.createElement("div");
+  gameRules.textContent = "Game Rules";
+  return gameRules;
+}
