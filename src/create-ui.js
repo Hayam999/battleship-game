@@ -32,13 +32,15 @@ function createShip(name, numOfCells) {
 
   const shipName = document.createElement("div");
   shipName.className = "ship-name";
-  shipName.innerText = name;
+  shipName.innerText = name + ": x" + numOfCells.toString();
 
   shipCover.appendChild(shipName);
 
   // creating the ship
   const shipContainer = document.createElement("div");
   shipContainer.className = "ship-container";
+  shipContainer.draggable = true;
+  shipContainer.id = name;
   shipContainer.style.display = "grid";
   shipContainer.style.gridTemplateColumns =
     "repeat(" + numOfCells.toString() + "," + cellSize + ")";
@@ -48,6 +50,8 @@ function createShip(name, numOfCells) {
   // giving a proper class Name to each cell of the ship to help styling it
   for (let i = 0; i < numOfCells; i++) {
     const cell = document.createElement("div");
+    const cellNum = i + 1;
+    cell.id = "cell" + cellNum.toString();
     if (i === 0) {
       drawCell(cell, "front");
     } else if (i === numOfCells - 1) {
@@ -158,8 +162,12 @@ export function createPlacingShipsRules() {
   const rulesDiv = document.createElement("div");
   rulesDiv.className = "rulesDiv";
 
-  const header = document.createElement("h3");
-  header.textContent = "Game";
+  // rules to place the ships content
+  const rulesContent = document.createElement("div");
+  rulesContent.innerText =
+    "- Ships must be placed horizontally or vertically, never diagonally. \n  - Ships can't overlap each other. \n - At least one square is required between ships.";
+
+  rulesDiv.appendChild(rulesContent);
   return rulesDiv;
 }
 
