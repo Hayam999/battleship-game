@@ -50,13 +50,15 @@ function createShip(name, numOfCells) {
   // giving a proper class Name to each cell of the ship to help styling it
   for (let i = 0; i < numOfCells; i++) {
     const cell = document.createElement("div");
-    const cellNum = i + 1;
-    cell.id = "cell" + cellNum.toString();
+    cell.id = name + (i + 1);
     if (i === 0) {
+      cell.classList.add("front");
       drawCell(cell, "front");
     } else if (i === numOfCells - 1) {
+      cell.classList.add("back");
       drawCell(cell, "back");
     } else {
+      cell.classList.add("middle");
       drawCell(cell, "middle");
     }
     cell.classList.add("cell");
@@ -149,8 +151,15 @@ export function createGameBoard() {
           cell.innerText = j;
         }
         cell.classList.add("numeric-cell");
+      } else if (j === 10 && i != 0) {
+        cell.classList.add("back");
+        cell.classList.add("cell");
+      } else if (j === 1 && i != 0) {
+        cell.classList.add("front");
+        cell.classList.add("cell");
       } else {
         cell.classList.add("cell");
+        cell.classList.add("middle");
       }
       gameBoard.appendChild(cell);
     }
