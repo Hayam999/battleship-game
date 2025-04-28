@@ -1,9 +1,14 @@
 // [ ] DEFINE reviveShips()
-// [ ]  keep the neighbouring rules, there must be at lest 1 cell between all cells from all sides
+// NOTE: |  keep the neighbouring rules, there must be at lest 1 cell between all cells from all sides
+// [ ] |  Store the ship's x and y position in your game data
+// [ ] |  DEFINE   turnShip() to turn the ship vertically to horizontally and vice versa
+// [ ] |  REFACTOR landShipCells() to handle landing horizontal ships
 // [ ] |  DEFINE reuniouShipCells()
-// [ ] |  DEFINE distributeShipCellsOverGameBoardCells()
-// [ ] |  attach eventListener to the class shipContainer
-//     |  this task id dependent on whether the dragging behaviour will change after distributing the cells over the gameBoard cells or not
+// [ ] |  ADD draging ships in the gameBord feature
+//     |  NOTE this will happen after removing the shipContainer from the place ships div by removing it entirely and creating a new div around the cells when clicking any of the cells, or moving the shipContainer with the same place as the cells have been landing
+// [x] |  DEFINE landShipCells()
+// [ ] |  | DEBUG goForward() as it allowes for forward appending and completing in the second line
+// [x] |  DEFINE distributeShipCellsOverGameBoardCells()
 // [x] |  | define dragStart event listeners for gameBoard
 // [x] |  | modify eventListeners in reviveShips
 // [x] |  ADD (front, middle, back) classes to the gameBoard cells
@@ -76,12 +81,6 @@ function renderUiToPlaceShips() {
   document.body.appendChild(placeShipsDiv);
 }
 
-// TODO add class Name = ship Name to the cell receiving the ship and all consequtive cells
-// TODO before appending ships to the cell make sure there are no ship class names in the one cell before and one cell after and there are no ships in the upper row or lower row "when placing horizontally, same for vertical placing";
-// TODO add double click event to the ship to change it's direction, if verticall make it horizontal and vice verca, changing directions are not allowed on the gameBoard, Add UI Guid for changeing the ship direction
-
-// TODO Store the ship's position in your game data
-// updateShipPosition(shipId, cellX, cellY);
 function reviveShips() {
   const parentDiv = document.getElementById("ships-harbour");
   const gameBoard = document.getElementById("placing-ships-gameBoard");
@@ -105,37 +104,13 @@ function reviveShips() {
     const shipElement = document.getElementById(shipId);
     const shipLength = shipsDic[shipId];
     const index = calculateIndex(gameBoard, event.clientX, event.clientY);
-    // assure ship isn't placed in first row or first col
-    if (index < 0) {
-      return;
-    }
 
     // push references to an array to append each cell in the gameBoard sololy, to limit ship dropping to desired gameCells
 
     const shipCells = getShipCells(shipId, shipLength);
 
-    // guarentee the ship will be on row or col one in both dircetions
-    // HORIZONTALLY
-
-    //[ ] TODO: VERTICALLY
-
     const cell = document.getElementById("cell" + index.toString());
     landShipCells(cell, index, shipCells);
-    // // add Ship Name as a class to the cells that carry the ship
-    // let cellId = index;
-    // let currentCell = cell;
-    // for (let i = 1; i <= shipLength; i++) {
-    //   currentCell.classList.add = shipId;
-    //   currentCell.classList.add = shipId + i;
-    //   cellId += 1;
-    //   currentCell = document.getElementById("cell" + cellId.toString());
-    // }
-    // cell.appendChild(shipElement);
-
-    // project ship on top of cells
-    shipElement.style.position = "relative";
-    shipElement.style.border = "none";
-    shipElement.style.zIndex = "100";
   });
 
   // gCell: cell that have been clicked to drop ship on
@@ -155,12 +130,10 @@ function reviveShips() {
       }
     }
     function goForward() {
-      let currentIndex = cellIndex;
       for (let i = 1; i <= shipLen; i++) {
-        if (currentIndex % 11 === 0 && i != shipLen) {
+        if (shipCells[i].classList.contains("middle") && i != shipLen) {
           return false;
         }
-        currentIndex += 1;
       }
       return true;
     }
