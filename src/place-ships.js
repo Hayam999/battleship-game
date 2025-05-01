@@ -2,12 +2,12 @@
 // NOTE: |  keep the neighbouring rules, there must be at lest 1 cell between all cells from all sides
 // [ ] |  Store the ship's x and y position in your game data
 // [ ] |  DEFINE   turnShip() to turn the ship vertically to horizontally and vice versa
-// [ ] |  REFACTOR landShipCells() to handle landing horizontal ships
+// [ ] |  REFACTOR landShip() to handle landing horizontal ships
 // [ ] |  DEFINE reuniouShipCells()
 // [ ] |  ADD draging ships in the gameBord feature
 //     |  NOTE this will happen after removing the shipContainer from the place ships div by removing it entirely and creating a new div around the cells when clicking any of the cells, or moving the shipContainer with the same place as the cells have been landing
-// [x] |  DEFINE landShipCells()
-// [ ] |  | DEBUG goForward() as it allowes for forward appending and completing in the second line
+// [x] |  DEFINE landShip()
+// [x] |  | DEBUG goForward() as it allowes for forward appending and completing in the second line
 // [x] |  DEFINE distributeShipCellsOverGameBoardCells()
 // [x] |  | define dragStart event listeners for gameBoard
 // [x] |  | modify eventListeners in reviveShips
@@ -51,7 +51,9 @@ function renderUiToPlaceShips() {
   placeShipsDiv.id = "place-ships-div";
   // GameBoard Section
   const gameBoardWrapper = document.createElement("div");
+  gameBoardWrapper.id = "gameBoard-container";
   const gameBoardHeader = document.createElement("h3");
+  gameBoardHeader.id = "gameBoard-header";
   gameBoardHeader.innerText = "Game Board";
   const gameBoard = createGameBoard();
   gameBoard.id = "placing-ships-gameBoard";
@@ -82,16 +84,15 @@ function renderUiToPlaceShips() {
 }
 
 function reviveShips() {
-  const parentDiv = document.getElementById("ships-harbour");
+  const shipHarbour = document.getElementById("ships-harbour");
   const gameBoard = document.getElementById("placing-ships-gameBoard");
 
-  parentDiv.addEventListener("dragstart", (ship) => {
+  shipHarbour.addEventListener("dragstart", (ship) => {
     ship.dataTransfer.setData("text/plain", ship.target.id);
   });
   gameBoard.addEventListener("dragstart", (ship) => {
     const shipId = ship.target.id;
     ship.dataTransfer.setData("text/plain", shipId);
-    removeShipName(parent, shipId, shipsDic[shipId]);
   });
   gameBoard.addEventListener("dragover", (event) => {
     event.preventDefault();
@@ -101,22 +102,37 @@ function reviveShips() {
   gameBoard.addEventListener("drop", (event) => {
     event.preventDefault();
     const shipId = event.dataTransfer.getData("text/plain");
-    const shipElement = document.getElementById(shipId);
-    const shipLength = shipsDic[shipId];
-    const index = calculateIndex(gameBoard, event.clientX, event.clientY);
+    const shipWrapper = document.getElementById(shipId);
+    //const shipLength = shipsDic[shipId];
+    const Pos = calculatePos(gameBoard, event.clientX, event.clientY);
 
-    // push references to an array to append each cell in the gameBoard sololy, to limit ship dropping to desired gameCells
+    // [ ] check Placing ship conditions
+    // placing conditions
+    const shipRect = shipWrapper.getBoundingClientRect();
+    const s = shipRect.width / 2;
+    if (!Pos) {
+      return;
+    } else if (
+      shipRect.width > Pos.xTillEnd + s ||
+      shipRect.height > Pos.yTillEnd + shipRect.height
+    ) {
+      return;
+    }
 
-    const shipCells = getShipCells(shipId, shipLength);
+    gameBoard.appendChild(shipWrapper);
+    shipWrapper.style.position = "absolute";
+    shipWrapper.style.top = Pos.y + "px";
+    shipWrapper.style.left = Pos.x + "px";
 
-    const cell = document.getElementById("cell" + index.toString());
-    landShipCells(cell, index, shipCells);
+    // const cell = document.getElementById("cell" + index.toString());
+    // const shipCells = getShipCells(shipId, shipLength);
+    // landShip(cell, index, shipCells, shipWrapper);
   });
 
   // gCell: cell that have been clicked to drop ship on
   // cellIndex: the position Number of gCell
   // shipCells: array of references to shipCells that is beng dropped
-  function landShipCells(gCell, cellIndex, shipCells) {
+  function landShip(gCell, cellIndex, shipCells, shipWrapper) {
     const shipLen = shipCells.length;
     if (gCell.classList.contains("back")) {
       appendBakward();
@@ -129,6 +145,10 @@ function reviveShips() {
         appendBakward();
       }
     }
+    // // append the unvisible shipWrapper to first cell to keep ship draggable
+    // shipWrapper.style.position = "relative";
+    // shipWrapper.style.zIndex = "100";
+    // shipCells[0].appendChild(shipWrapper);
     function goForward() {
       for (let i = 1; i <= shipLen; i++) {
         if (shipCells[i].classList.contains("middle") && i != shipLen) {
@@ -167,25 +187,38 @@ function reviveShips() {
   }
 }
 
-// removes the class name of the ship from given cell and cells next to it;
-function removeShipName(cell, shipName, shipLength) {}
-
-// calculates position Number of a cell in the game Board that mouse had selected
-function calculateIndex(gameBoard, mouseX, mouseY) {
+// calculates position where we should place the ship
+function calculatePos(gameBoard, mouseX, mouseY) {
   const boardRect = gameBoard.getBoundingClientRect();
 
-  const cellSize = parseInt(styles.getPropertyValue("--cell-size"));
+  const cellWidth = parseInt(styles.getPropertyValue("--cell-width"));
+  const cellHeight = parseInt(styles.getPropertyValue("--cell-height"));
   const gapSize = parseInt(styles.getPropertyValue("--cell-gap"));
 
   // coordinates of the mouse relative to the gameBoard means : the start of the gameBoard is the origin
   const dropX = mouseX - boardRect.x;
   const dropY = mouseY - boardRect.y;
+  const w = boardRect.width;
+  const h = boardRect.height;
+  const xTillEnd = w - dropX;
+  const yTillEnd = h - dropY;
+  if (dropX <= 70 || dropY <= 70) {
+    return false;
+  }
+  const difX = dropX % (cellWidth + gapSize);
+  const difY = dropY % (cellHeight + gapSize);
 
-  const xIndex = Math.floor(dropX / (cellSize + gapSize));
-  const yIndex = Math.floor(dropY / (cellSize + gapSize));
-  const index = yIndex * 11 + xIndex;
+  const x = mouseX - difX;
+  const y = mouseY - difY;
 
-  return index;
+  return {
+    x: x,
+    y: y,
+    width: w,
+    height: h,
+    xTillEnd: xTillEnd,
+    yTillEnd: yTillEnd,
+  };
 }
 
 // place all ship cells into one shipContainer while dragging

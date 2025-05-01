@@ -1,6 +1,7 @@
 :root {
-  --cell-size: 60px;
-  --cell-gap: 10px;
+  --cell-width: 3.3vw;
+  --cell-height: 3.3vw;
+  --cell-gap: 0.5vw;
 }
 /* 1. Use a more-intuitive box-sizing model */
 *,
@@ -235,14 +236,16 @@ button#cancel-name:hover {
 
 #place-ships-div {
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
+  justify-content: space-between;
+  padding: 2vh 2vw;
+  gap: 5vw;
 }
 
 .gameBoard {
   display: grid;
-  grid-template-columns: repeat(11, var(--cell-size));
-  grid-template-rows: repeat(11, var(--cell-size));
+  grid-template-columns: repeat(11, var(--cell-width));
+  grid-template-rows: repeat(11, var(--cell-height));
   gap: var(--cell-gap);
   border-radius: 10px;
 }
@@ -263,4 +266,14 @@ button#cancel-name:hover {
 .shipContainer {
   gap: 10px;
   border-radius: 10px;
+}
+
+#gameBoard-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#gameBoard-header {
+  text-align: left;
+  padding-bottom: 1vh;
 }
