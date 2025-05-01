@@ -5,8 +5,9 @@ const ships = [
   ["submarine", 3],
   ["destroy", 2],
 ];
+
 const cellSize = getComputedStyle(document.documentElement)
-  .getPropertyValue("--cell-size")
+  .getPropertyValue("--cell-width")
   .trim();
 
 const cellGap = getComputedStyle(document.documentElement)
@@ -72,19 +73,20 @@ function createShip(name, numOfCells) {
 // paint the cell according to it's position in the ship
 function drawCell(cell, direction) {
   const canvas = document.createElement("canvas");
-  const canvaSize = parseInt(cellSize);
+  const canvaSize = parseInt(cellSize) * (window.innerWidth / 100);
+
   canvas.width = canvaSize;
   canvas.height = canvaSize;
 
   const ctx = canvas.getContext("2d");
-  const yDownValue = 12;
+  const yDownValue = canvaSize / 5;
   const recHeight = canvaSize - yDownValue * 2;
   const xCurveBegin = 30;
   const xCurvePeak = 10;
   const yCurvePeak = yDownValue + recHeight / 2;
 
   if (direction === "middle") {
-    ctx.fillRect(0, yDownValue, canvaSize, canvaSize - yDownValue * 2);
+    ctx.fillRect(0, yDownValue, canvaSize, recHeight);
     ctx.save();
   } else if (direction === "front") {
     ctx.beginPath();
