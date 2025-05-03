@@ -108,7 +108,7 @@ function reviveShips() {
     const shipId = event.dataTransfer.getData("text/plain");
     const shipWrapper = document.getElementById(shipId);
     //const shipLength = shipsDic[shipId];
-    const Pos = calculatePos(gameBoard, event.clientX, event.clientY);
+    const Pos = clacPosAndIndex(gameBoard, event.clientX, event.clientY);
 
     // [ ] check Placing ship conditions
     // placing conditions
@@ -125,8 +125,8 @@ function reviveShips() {
 
     gameBoard.appendChild(shipWrapper);
     shipWrapper.style.position = "absolute";
-    shipWrapper.style.top = Pos.y + "px";
-    shipWrapper.style.left = Pos.x + "px";
+    shipWrapper.style.top = Pos.yPos + "vh";
+    shipWrapper.style.left = Pos.xPos + "vw";
 
     // const cell = document.getElementById("cell" + index.toString());
     // const shipCells = getShipCells(shipId, shipLength);
@@ -225,6 +225,25 @@ function calculatePos(gameBoard, mouseX, mouseY) {
   };
 }
 
+function clacPosAndIndex(gameBoard, mouseX, mouseY) {
+  // convert coordinates of the mouse from px to viewPort units(vw, vh)
+  const vwUnitValueInPxs = window.innerWidth / 100;
+  const xDropInVw = mouseX / vwUnitValueInPxs;
+
+  const vhUnitValueInPxs = window.innerHeight / 100;
+  const yDropInVh = mouseY / vhUnitValueInPxs;
+
+  // calculate (x, y) position related to gameBoard cells
+
+  return {
+    xPos: xDropInVw,
+    yPos: yDropInVh,
+    width: 1000,
+    height: 1000,
+    xTillEnd: 1000,
+    yTillEnd: 1000,
+  };
+}
 // place all ship cells into one shipContainer while dragging
 function reuniouShipCells() {
   return;
