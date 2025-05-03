@@ -61,10 +61,13 @@ function renderUiToPlaceShips() {
 
   // Rules And Ships Section
   const shipsAndRulesWrapper = document.createElement("div");
+  shipsAndRulesWrapper.id = "ships-n-rules-wrapper";
 
   // Rules Section
   const rulesWrapper = document.createElement("div");
+  rulesWrapper.id = "rules-wrapper";
   const rulesHeader = document.createElement("h3");
+  rulesHeader.id = "rules-header";
   rulesHeader.innerText = "Drag and Drop each Ship into the Game Board";
   const rules = createPlacingShipsRules();
   rulesWrapper.append(rulesHeader, rules);
@@ -73,6 +76,7 @@ function renderUiToPlaceShips() {
   const shipsWrapper = document.createElement("div");
   shipsWrapper.id = "ships-harbour";
   const shipsHeader = document.createElement("h3");
+  shipsHeader.id = "ships-header";
   shipsHeader.innerText = "Ships";
   const ships = createShips();
   shipsWrapper.append(shipsHeader, ships);

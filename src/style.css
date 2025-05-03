@@ -236,10 +236,10 @@ button#cancel-name:hover {
 
 #place-ships-div {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   padding: 2vh 2vw;
   gap: 5vw;
+  flex: 1;
 }
 
 .gameBoard {
@@ -264,7 +264,7 @@ button#cancel-name:hover {
 }
 
 .shipContainer {
-  gap: 10px;
+  gap: var(--cell-gap);
   border-radius: 10px;
 }
 
@@ -276,4 +276,18 @@ button#cancel-name:hover {
 #gameBoard-header {
   text-align: left;
   padding-bottom: 1vh;
+}
+
+#ships-n-rules-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vw;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap-reverse;
+}
+
+#rules-header,
+#ships-header {
+  padding-bottom: 1vw;
 }
