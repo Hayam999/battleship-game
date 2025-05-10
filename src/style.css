@@ -240,6 +240,7 @@ button#cancel-name:hover {
   padding: 2vh 2vw;
   gap: 5vw;
   flex: 1;
+  flex-wrap: wrap-reverse;
 }
 
 .gameBoard {
@@ -284,7 +285,6 @@ button#cancel-name:hover {
   gap: 0.5vw;
   justify-content: space-between;
   align-items: baseline;
-  flex-wrap: wrap-reverse;
 }
 
 #rules-header,

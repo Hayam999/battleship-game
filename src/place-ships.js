@@ -13,6 +13,8 @@
 // [x] |  | modify eventListeners in reviveShips
 // [x] |  ADD (front, middle, back) classes to the gameBoard cells
 
+// [ ] | Make numbers in the gameBoard responsive
+
 import {
   createShips,
   createGameBoard,
@@ -124,120 +126,62 @@ function reviveShips() {
     }
 
     gameBoard.appendChild(shipWrapper);
+    gameBoard.style.position = "relative";
     shipWrapper.style.position = "absolute";
-    shipWrapper.style.top = Pos.yPos + "vh";
-    shipWrapper.style.left = Pos.xPos + "vw";
+
+    shipWrapper.style.top = Pos.yPos + "%";
+    shipWrapper.style.left = Pos.xPos + "%";
 
     // const cell = document.getElementById("cell" + index.toString());
     // const shipCells = getShipCells(shipId, shipLength);
     // landShip(cell, index, shipCells, shipWrapper);
   });
 
-  // gCell: cell that have been clicked to drop ship on
-  // cellIndex: the position Number of gCell
-  // shipCells: array of references to shipCells that is beng dropped
-  function landShip(gCell, cellIndex, shipCells, shipWrapper) {
-    const shipLen = shipCells.length;
-    if (gCell.classList.contains("back")) {
-      appendBakward();
-    } else if (gCell.classList.contains("front")) {
-      appendForward();
-    } else if (gCell.classList.contains("middle")) {
-      if (goForward()) {
-        appendForward();
-      } else {
-        appendBakward();
-      }
-    }
-    // // append the unvisible shipWrapper to first cell to keep ship draggable
-    // shipWrapper.style.position = "relative";
-    // shipWrapper.style.zIndex = "100";
-    // shipCells[0].appendChild(shipWrapper);
-    function goForward() {
-      for (let i = 1; i <= shipLen; i++) {
-        if (shipCells[i].classList.contains("middle") && i != shipLen) {
-          return false;
-        }
-      }
-      return true;
-    }
-    function appendForward() {
-      let currentIndex = cellIndex;
-      let currentGCell = gCell;
-      for (let i = 0; i < shipLen; i++) {
-        currentGCell.appendChild(shipCells[i]);
-        currentIndex += 1;
-        currentGCell = document.getElementById("cell" + currentIndex);
-      }
-    }
-    function appendBakward() {
-      let currentIndex = cellIndex;
-      let currentGCell = gCell;
-      for (let i = shipLen - 1; i >= 0; i--) {
-        currentGCell.append(shipCells[i]);
-        currentIndex -= 1;
-        currentGCell = document.getElementById("cell" + currentIndex);
-      }
-    }
-  }
-  function getShipCells(shipId, shipLen) {
-    const shipCells = [];
-    let currentShipCell;
-    for (let i = 1; i <= shipLen; i++) {
-      currentShipCell = document.getElementById(shipId + i);
-      shipCells.push(currentShipCell);
-    }
-    return shipCells;
-  }
-}
-
-// calculates position where we should place the ship
-function calculatePos(gameBoard, mouseX, mouseY) {
-  const boardRect = gameBoard.getBoundingClientRect();
-
-  const cellWidth = parseInt(styles.getPropertyValue("--cell-width"));
-  const cellHeight = parseInt(styles.getPropertyValue("--cell-height"));
-  const gapSize = parseInt(styles.getPropertyValue("--cell-gap"));
-
-  // coordinates of the mouse relative to the gameBoard means : the start of the gameBoard is the origin
-  const dropX = mouseX - boardRect.x;
-  const dropY = mouseY - boardRect.y;
-  const w = boardRect.width;
-  const h = boardRect.height;
-  const xTillEnd = w - dropX;
-  const yTillEnd = h - dropY;
-  if (dropX <= 70 || dropY <= 70) {
-    return false;
-  }
-  const difX = dropX % (cellWidth + gapSize);
-  const difY = dropY % (cellHeight + gapSize);
-
-  const x = mouseX - difX;
-  const y = mouseY - difY;
-
-  return {
-    x: x,
-    y: y,
-    width: w,
-    height: h,
-    xTillEnd: xTillEnd,
-    yTillEnd: yTillEnd,
-  };
+  //
 }
 
 function clacPosAndIndex(gameBoard, mouseX, mouseY) {
+  // [ ] !!! the position must be relative to the  gameBoard
+  // wherever the gameBoard goes the ship will also be there
+  const style = getComputedStyle(document.documentElement);
+  const boardRect = gameBoard.getBoundingClientRect();
+  const cellWidth = parseFloat(
+    style.getPropertyValue("--cell-width").trim().slice(0, -2),
+  );
+  const cellHeight = parseFloat(
+    style.getPropertyValue("--cell-height").trim().slice(0, -2),
+  );
+  const gapSize = parseFloat(
+    style.getPropertyValue("--cell-gap").trim().slice(0, -2),
+  );
+
   // convert coordinates of the mouse from px to viewPort units(vw, vh)
-  const vwUnitValueInPxs = window.innerWidth / 100;
-  const xDropInVw = mouseX / vwUnitValueInPxs;
+  const vwUnitValueInPxls = window.innerWidth / 100;
+  const vhUnitValueInPxls = window.innerHeight / 100;
 
-  const vhUnitValueInPxs = window.innerHeight / 100;
-  const yDropInVh = mouseY / vhUnitValueInPxs;
+  // convert cellHeight & gapSize values from vw to vh to make ship position responsive from the y axis
+  const cellHeigthInVh = (cellHeight * vwUnitValueInPxls) / vhUnitValueInPxls;
+  const gapSizeInVh = (gapSize * vwUnitValueInPxls) / vhUnitValueInPxls;
 
-  // calculate (x, y) position related to gameBoard cells
+  // gameBoard position in (vw, vh)
+  const gameBoardXPosInVw = boardRect.x / vwUnitValueInPxls;
+  const gameBoardYPosInVh = boardRect.y / vhUnitValueInPxls;
+
+  // find X ship Position in vw
+  const dropX = mouseX - boardRect.x;
+  const diffX = dropX % ((cellWidth + gapSize) * vwUnitValueInPxls);
+  const xInVw = (dropX - diffX) / vwUnitValueInPxls;
+  const x = (xInVw * 100) / (boardRect.width / vwUnitValueInPxls);
+
+  // find Y ship Position vh
+  const dropY = mouseY - boardRect.y;
+  const diffY = dropY % ((cellHeight + gapSize) * vwUnitValueInPxls);
+  const yInVh = (dropY - diffY) / vhUnitValueInPxls;
+  const y = (yInVh * 100) / (boardRect.height / vhUnitValueInPxls);
 
   return {
-    xPos: xDropInVw,
-    yPos: yDropInVh,
+    xPos: x,
+    yPos: y,
     width: 1000,
     height: 1000,
     xTillEnd: 1000,
@@ -250,3 +194,93 @@ function reuniouShipCells() {
 }
 
 export { getShipsPoses };
+
+// gCell: cell that have been clicked to drop ship on
+// // cellIndex: the position Number of gCell
+// // shipCells: array of references to shipCells that is beng dropped
+// function landShip(gCell, cellIndex, shipCells, shipWrapper) {
+//   const shipLen = shipCells.length;
+//   if (gCell.classList.contains("back")) {
+//     appendBakward();
+//   } else if (gCell.classList.contains("front")) {
+//     appendForward();
+//   } else if (gCell.classList.contains("middle")) {
+//     if (goForward()) {
+//       appendForward();
+//     } else {
+//       appendBakward();
+//     }
+//   }
+//   // // append the unvisible shipWrapper to first cell to keep ship draggable
+//   // shipWrapper.style.position = "relative";
+//   // shipWrapper.style.zIndex = "100";
+//   // shipCells[0].appendChild(shipWrapper);
+//   function goForward() {
+//     for (let i = 1; i <= shipLen; i++) {
+//       if (shipCells[i].classList.contains("middle") && i != shipLen) {
+//         return false;
+//       }
+//     }
+//     return true;
+//   }
+//   function appendForward() {
+//     let currentIndex = cellIndex;
+//     let currentGCell = gCell;
+//     for (let i = 0; i < shipLen; i++) {
+//       currentGCell.appendChild(shipCells[i]);
+//       currentIndex += 1;
+//       currentGCell = document.getElementById("cell" + currentIndex);
+//     }
+//   }
+//   function appendBakward() {
+//     let currentIndex = cellIndex;
+//     let currentGCell = gCell;
+//     for (let i = shipLen - 1; i >= 0; i--) {
+//       currentGCell.append(shipCells[i]);
+//       currentIndex -= 1;
+//       currentGCell = document.getElementById("cell" + currentIndex);
+//     }
+//   }
+// }
+// function getShipCells(shipId, shipLen) {
+//   const shipCells = [];
+//   let currentShipCell;
+//   for (let i = 1; i <= shipLen; i++) {
+//     currentShipCell = document.getElementById(shipId + i);
+//     shipCells.push(currentShipCell);
+//   }
+//   return shipCells;
+// }
+// // calculates position where we should place the ship
+// function calculatePos(gameBoard, mouseX, mouseY) {
+//   const boardRect = gameBoard.getBoundingClientRect();
+
+//   const cellWidth = parseInt(styles.getPropertyValue("--cell-width"));
+//   const cellHeight = parseInt(styles.getPropertyValue("--cell-height"));
+//   const gapSize = parseInt(styles.getPropertyValue("--cell-gap"));
+
+//   // coordinates of the mouse relative to the gameBoard means : the start of the gameBoard is the origin
+//   const dropX = mouseX - boardRect.x;
+//   const dropY = mouseY - boardRect.y;
+//   const w = boardRect.width;
+//   const h = boardRect.height;
+//   const xTillEnd = w - dropX;
+//   const yTillEnd = h - dropY;
+//   if (dropX <= 70 || dropY <= 70) {
+//     return false;
+//   }
+//   const difX = dropX % (cellWidth + gapSize);
+//   const difY = dropY % (cellHeight + gapSize);
+
+//   const x = mouseX - difX;
+//   const y = mouseY - difY;
+
+//   return {
+//     x: x,
+//     y: y,
+//     width: w,
+//     height: h,
+//     xTillEnd: xTillEnd,
+//     yTillEnd: yTillEnd,
+//   };
+// }
