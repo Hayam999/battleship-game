@@ -249,6 +249,7 @@ button#cancel-name:hover {
   grid-template-rows: repeat(11, var(--cell-height));
   gap: var(--cell-gap);
   border-radius: 10px;
+  font-size: 0.8rem;
 }
 
 .cell {
