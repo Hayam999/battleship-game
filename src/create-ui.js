@@ -29,13 +29,21 @@ function createShip(name, numOfCells) {
   // and give it a name just on top of it
 
   const shipCover = document.createElement("div");
+  shipCover.className = "ship-cover";
   shipCover.id = name + "-cover-div";
+
+  const nameAndBtn = document.createElement("div");
+  nameAndBtn.classList = "ship-name-and-turn-btn-div";
 
   const shipName = document.createElement("div");
   shipName.className = "ship-name";
   shipName.innerText = name + ": x" + numOfCells.toString();
+  nameAndBtn.appendChild(shipName);
 
-  shipCover.appendChild(shipName);
+  const turnBtn = createTurnBtn();
+  nameAndBtn.appendChild(turnBtn);
+
+  shipCover.appendChild(nameAndBtn);
 
   // creating the ship
   const shipContainer = document.createElement("div");
@@ -67,6 +75,7 @@ function createShip(name, numOfCells) {
   }
 
   shipCover.appendChild(shipContainer);
+
   return shipCover;
 }
 
@@ -182,6 +191,24 @@ export function createPlacingShipsRules() {
   return rulesDiv;
 }
 
+export function createTurnBtn() {
+  const btn = document.createElement("button");
+  btn.className = "turn-ship";
+
+  const svg = document.createElement("div");
+  svg.className = "turn-ship-svg";
+
+  // Set the text content using a text node instead
+  const textNode = document.createTextNode("Rotate");
+  textNode.id = "rotate";
+
+  // Add both elements to the button
+  btn.appendChild(textNode);
+  btn.appendChild(svg);
+
+  return btn;
+  // [x]!!! style btn and make svg visible;
+}
 export function createGameRules() {
   const gameRules = document.createElement("div");
   gameRules.textContent = "Game Rules";

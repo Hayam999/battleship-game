@@ -3,7 +3,6 @@
 // [ ] |  Store the ship's x and y position in your game data
 // [ ] |  DEFINE   turnShip() to turn the ship vertically to horizontally and vice versa
 // [ ] |  REFACTOR landShip() to handle landing horizontal ships
-// [ ] |  DEFINE reuniouShipCells()
 // [x] |  ADD draging ships in the gameBord feature
 //     |  NOTE this will happen after removing the shipContainer from the place ships div by removing it entirely and creating a new div around the cells when clicking any of the cells, or moving the shipContainer with the same place as the cells have been landing
 // [x] |  DEFINE landShip()
@@ -118,16 +117,6 @@ function reviveShips() {
 
     // [ ] check Placing ship conditions
     // placing conditions
-    const shipRect = shipWrapper.getBoundingClientRect();
-    const s = shipRect.width / 2;
-    if (!PosAndIndex) {
-      return;
-    } else if (
-      shipRect.width > PosAndIndex.xTillEnd + s ||
-      shipRect.height > PosAndIndex.yTillEnd + shipRect.height
-    ) {
-      return;
-    }
 
     gameBoard.appendChild(shipWrapper);
     gameBoard.style.position = "relative";
@@ -135,14 +124,7 @@ function reviveShips() {
 
     shipWrapper.style.top = PosAndIndex.yPos + "%";
     shipWrapper.style.left = PosAndIndex.xPos + "%";
-    console.log(PosAndIndex.gameBoradIndex);
-
-    // const cell = document.getElementById("cell" + index.toString());
-    // const shipCells = getShipCells(shipId, shipLength);
-    // landShip(cell, index, shipCells, shipWrapper);
   });
-
-  //
 }
 
 function clacPosAndIndex(gameBoard, mouseX, mouseY) {
@@ -193,15 +175,7 @@ function clacPosAndIndex(gameBoard, mouseX, mouseY) {
     xPos: x,
     yPos: y,
     gameBoradIndex: index,
-    width: 1000,
-    height: 1000,
-    xTillEnd: 1000,
-    yTillEnd: 1000,
   };
-}
-// place all ship cells into one shipContainer while dragging
-function reuniouShipCells() {
-  return;
 }
 
 export { getShipsPoses };
