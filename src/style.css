@@ -356,3 +356,7 @@ button#cancel-name:hover {
   gap: 0.5em;
   align-items: start;
 }
+
+#ships-div {
+  position: relative;
+}

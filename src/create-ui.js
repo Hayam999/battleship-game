@@ -16,6 +16,7 @@ const cellGap = getComputedStyle(document.documentElement)
 export function createShips() {
   //  and that one is gonna create and return a whole div that have all the ships inside
   const shipsDiv = document.createElement("div");
+  shipsDiv.id = "ships-div";
 
   ships.forEach((ship) => {
     const currentShip = createShip(ship[0], ship[1]);
@@ -41,6 +42,7 @@ function createShip(name, numOfCells) {
   nameAndBtn.appendChild(shipName);
 
   const turnBtn = createTurnBtn();
+  turnBtn.id = "turn " + name;
   nameAndBtn.appendChild(turnBtn);
 
   shipCover.appendChild(nameAndBtn);

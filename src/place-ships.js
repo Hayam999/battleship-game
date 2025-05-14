@@ -2,7 +2,7 @@
 // NOTE: |  keep the neighbouring rules, there must be at lest 1 cell between all cells from all sides
 // [ ] |  Store the ship's x and y position in your game data
 // [ ] |  DEFINE   turnShip() to turn the ship vertically to horizontally and vice versa
-// [ ] |  REFACTOR landShip() to handle landing horizontal ships
+// [ ] |  | reposition ship if it have been turned inside the grid
 // [x] |  ADD draging ships in the gameBord feature
 //     |  NOTE this will happen after removing the shipContainer from the place ships div by removing it entirely and creating a new div around the cells when clicking any of the cells, or moving the shipContainer with the same place as the cells have been landing
 // [x] |  DEFINE landShip()
@@ -91,6 +91,7 @@ function renderUiToPlaceShips() {
 function reviveShips() {
   const shipHarbour = document.getElementById("ships-harbour");
   const gameBoard = document.getElementById("placing-ships-gameBoard");
+  const shipsDiv = document.getElementById("ships-div");
 
   shipHarbour.addEventListener("dragstart", (ship) => {
     ship.dataTransfer.setData("text/plain", ship.target.id);
@@ -114,7 +115,6 @@ function reviveShips() {
       event.clientX,
       event.clientY,
     );
-
     // [ ] check Placing ship conditions
     // placing conditions
 
@@ -125,6 +125,42 @@ function reviveShips() {
     shipWrapper.style.top = PosAndIndex.yPos + "%";
     shipWrapper.style.left = PosAndIndex.xPos + "%";
   });
+  shipsDiv.addEventListener("click", (e) => {
+    if (e.target.classList.contains("turn-ship")) {
+      const shipId = e.target.id.substring(5);
+      const ship = document.getElementById(shipId);
+
+      const currentRotation = getRotationDegrees(ship);
+      const newRotation = currentRotation + 90;
+      ship.style.transform = `rotate(${newRotation}deg)`;
+
+      // [x] complete rotating the ship properly and make rotation available from horizontal to vertical and vice versa; make the ship change it's direction in a beautiful way
+      ship.style.position = "relative";
+      ship.style.top = "100%";
+      ship.style.left = "100%";
+      ship.style.transformOrigin = "center";
+      ship.style.zIndex = "1";
+    }
+  });
+}
+
+function getRotationDegrees(element) {
+  const style = window.getComputedStyle(element);
+  const transform = style.transform;
+
+  if (transform === "none") return 0;
+
+  // The transform matrix looks like: matrix(a, b, c, d, tx, ty)
+  const values = transform.match(/matrix\(([^)]+)\)/)[1].split(", ");
+  const a = parseFloat(values[0]);
+  const b = parseFloat(values[1]);
+
+  // Calculate the angle in degrees
+  const radians = Math.atan2(b, a);
+  const degrees = Math.round(radians * (180 / Math.PI));
+
+  // Ensure degrees is always a positive rotation between 0–359
+  return (degrees + 360) % 360;
 }
 
 function clacPosAndIndex(gameBoard, mouseX, mouseY) {
