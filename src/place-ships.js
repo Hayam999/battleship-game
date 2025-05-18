@@ -74,11 +74,7 @@ function renderUiToPlaceShips() {
 }
 
 function reviveShips() {
-  // [ ] !!! fix the ship positioning while it's rotated
-  // [ ]     find a solution to the ghost image for the ship while dragging
-  // [ ]     if needed you can change the drag and drop events to the mouseOn mouseUp events and make the whole ship move with you instead of the ghost element
   const placeShipsDiv = document.getElementById("place-ships-div");
-  const shipHarbour = document.getElementById("ships-harbour");
   const gameBoard = document.getElementById("placing-ships-gameBoard");
   const shipsDiv = document.getElementById("ships-div");
   let isDragging = false;
@@ -87,8 +83,6 @@ function reviveShips() {
 
   placeShipsDiv.addEventListener("mousedown", (e) => {
     e.preventDefault();
-    // [ ] code what needed to catch the ship
-    // NOTE: in savor.js there is a claude.ai solution to drag an element with the mouse cursor
     const parent = hasParentWithClass(e.target, "ship-container");
     if (parent) {
       isDragging = true;
@@ -100,30 +94,12 @@ function reviveShips() {
       draggedShip.style.position = "fixed";
       draggedShip.style.left = e.clientX - offsetX + "px";
       draggedShip.style.top = e.clientY - offsetY + "px";
-      draggedShip.zIndex = "1000";
     }
   });
   placeShipsDiv.addEventListener("mousemove", (e) => {
     if (isDragging) {
       draggedShip.style.left = e.clientX - offsetX + "px";
       draggedShip.style.top = e.clientY - offsetY + "px";
-    }
-  });
-
-  shipsDiv.addEventListener("click", (e) => {
-    if (e.target.classList.contains("turn-ship")) {
-      const shipId = e.target.id.substring(5);
-      const ship = document.getElementById(shipId);
-
-      const currentRotation = getRotationDegrees(ship);
-      const newRotation = currentRotation + 90;
-      ship.style.transform = `rotate(${newRotation}deg)`;
-
-      ship.style.position = "relative";
-      ship.style.top = "100%";
-      ship.style.left = "100%";
-      ship.style.transformOrigin = "center";
-      ship.style.zIndex = "1";
     }
   });
 
@@ -145,6 +121,25 @@ function reviveShips() {
       draggedShip = null;
       offsetX = null;
       offsetY = null;
+    }
+  });
+
+  // rotating the ship functionality
+  shipsDiv.addEventListener("click", (e) => {
+    if (e.target.classList.contains("turn-ship")) {
+      const shipId = e.target.id.substring(5);
+      const ship = document.getElementById(shipId);
+      if (shipsDiv.contains(ship)) {
+        const currentRotation = getRotationDegrees(ship);
+        const newRotation = currentRotation + 90;
+        ship.style.transform = `rotate(${newRotation}deg)`;
+
+        ship.style.position = "relative";
+        ship.style.top = "100%";
+        ship.style.left = "100%";
+        ship.style.transformOrigin = "center";
+        ship.style.zIndex = "1";
+      }
     }
   });
 }
