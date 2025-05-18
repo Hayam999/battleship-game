@@ -103,24 +103,33 @@ function reviveShips() {
     }
   });
 
-  document.addEventListener("mouseup", (event) => {
+  placeShipsDiv.addEventListener("mouseup", (event) => {
     event.preventDefault();
-    if (isDragging) {
-      const PosAndIndex = clacPosAndIndex(
-        gameBoard,
-        event.clientX,
-        event.clientY,
-      );
-      // position the ship in the gamebord accurately
-      gameBoard.appendChild(draggedShip);
-      draggedShip.style.position = "absolute";
-      draggedShip.style.top = PosAndIndex.yPos + "%";
-      draggedShip.style.left = PosAndIndex.xPos + "%";
 
-      isDragging = false;
-      draggedShip = null;
-      offsetX = null;
-      offsetY = null;
+    if (isDragging) {
+      const gameBoardRec = gameBoard.getBoundingClientRect();
+      if (
+        event.clientX >= gameBoardRec.left &&
+        event.clientX <= gameBoardRec.right &&
+        event.clientY >= gameBoardRec.top &&
+        event.clientY <= gameBoardRec.bottom
+      ) {
+        const PosAndIndex = clacPosAndIndex(
+          gameBoard,
+          event.clientX,
+          event.clientY,
+        );
+        // position the ship in the gamebord accurately
+        gameBoard.appendChild(draggedShip);
+        draggedShip.style.position = "absolute";
+        draggedShip.style.top = PosAndIndex.yPos + "%";
+        draggedShip.style.left = PosAndIndex.xPos + "%";
+
+        isDragging = false;
+        draggedShip = null;
+        offsetX = null;
+        offsetY = null;
+      }
     }
   });
 
