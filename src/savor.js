@@ -42,7 +42,6 @@ function renderUiToPlaceShips() {
   gameBoardHeader.innerText = "Game Board";
   const gameBoard = createGameBoard();
   gameBoard.id = "placing-ships-gameBoard";
-  gameBoard.style.position = "relative";
   gameBoardWrapper.append(gameBoardHeader, gameBoard);
 
   // Rules And Ships Section
@@ -74,42 +73,85 @@ function renderUiToPlaceShips() {
 }
 
 function reviveShips() {
-  // [ ] !!! fix the ship positioning while it's rotated
-  // [ ]     find a solution to the ghost image for the ship while dragging
-  // [ ]     if needed you can change the drag and drop events to the mouseOn mouseUp events and make the whole ship move with you instead of the ghost element
   const placeShipsDiv = document.getElementById("place-ships-div");
   const shipHarbour = document.getElementById("ships-harbour");
   const gameBoard = document.getElementById("placing-ships-gameBoard");
   const shipsDiv = document.getElementById("ships-div");
-  let isDragging = false;
-  let draggedShip;
-  let offsetX, offsetY;
 
-  placeShipsDiv.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    // [ ] code what needed to catch the ship
-    // NOTE: in savor.js there is a claude.ai solution to drag an element with the mouse cursor
-    const parent = hasParentWithClass(e.target, "ship-container");
-    if (parent) {
-      isDragging = true;
-      draggedShip = parent;
-      const rect = parent.getBoundingClientRect();
-      offsetX = e.clientX - rect.left;
-      offsetY = e.clientY - rect.top;
-
-      draggedShip.style.position = "fixed";
-      draggedShip.style.left = e.clientX - offsetX + "px";
-      draggedShip.style.top = e.clientY - offsetY + "px";
-      draggedShip.zIndex = "1000";
-    }
+  gameBoard.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
   });
-  placeShipsDiv.addEventListener("mousemove", (e) => {
-    if (isDragging) {
-      draggedShip.style.left = e.clientX - offsetX + "px";
-      draggedShip.style.top = e.clientY - offsetY + "px";
-    }
+  placeShipsDiv.addEventListener("dragstart", (e) => {
+    const dragEle = e.target.closest(".ship-container");
+    if (!dragEle) return; // Guard clause if no ship container was found
+
+    // Remove any previous ghost elements
+    const oldGhost = document.getElementById("drag-ghost");
+    if (oldGhost) oldGhost.remove();
+
+    // Create a proper ghost element that maintains rotation and styling
+    const ghostEle = dragEle.cloneNode(true);
+    ghostEle.id = "drag-ghost";
+    ghostEle.style.position = "absolute";
+    ghostEle.style.top = "-9999px";
+    ghostEle.style.left = "-9999px";
+    ghostEle.style.opacity = "0.8"; // Make it slightly transparent
+    ghostEle.style.pointerEvents = "none"; // Prevent it from interfering with other elements
+
+    // Copy computed styles from the original element
+    const computedStyle = window.getComputedStyle(dragEle);
+
+    // Apply rotation and transform origin
+    ghostEle.style.transform = computedStyle.transform;
+    ghostEle.style.transformOrigin = computedStyle.transformOrigin;
+
+    // Make sure all canvas elements are visible
+    const canvases = ghostEle.querySelectorAll("canvas");
+    canvases.forEach((canvas) => {
+      const originalCanvas = dragEle.querySelector(`canvas[id="${canvas.id}"]`);
+      if (originalCanvas) {
+        // Copy the canvas content
+        const context = canvas.getContext("2d");
+        canvas.width = originalCanvas.width;
+        canvas.height = originalCanvas.height;
+        context.drawImage(originalCanvas, 0, 0);
+      }
+    });
+
+    // Append to body
+    document.body.appendChild(ghostEle);
+
+    // Calculate proper offset for drag image based on rotation
+    const rect = dragEle.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+
+    // Set the drag image with proper positioning
+    e.dataTransfer.setDragImage(ghostEle, offsetX, offsetY);
+
+    // Set data for the drop event
+    e.dataTransfer.setData("text/plain", dragEle.id);
   });
 
+  gameBoard.addEventListener("drop", (event) => {
+    event.preventDefault();
+    const shipId = event.dataTransfer.getData("text/plain");
+    const shipWrapper = document.getElementById(shipId);
+    //const shipLength = shipsDic[shipId];
+    const PosAndIndex = clacPosAndIndex(
+      gameBoard,
+      event.clientX,
+      event.clientY,
+    );
+
+    gameBoard.appendChild(shipWrapper);
+    gameBoard.style.position = "relative";
+    shipWrapper.style.position = "absolute";
+
+    shipWrapper.style.top = PosAndIndex.yPos + "%";
+    shipWrapper.style.left = PosAndIndex.xPos + "%";
+  });
   shipsDiv.addEventListener("click", (e) => {
     if (e.target.classList.contains("turn-ship")) {
       const shipId = e.target.id.substring(5);
@@ -124,27 +166,6 @@ function reviveShips() {
       ship.style.left = "100%";
       ship.style.transformOrigin = "center";
       ship.style.zIndex = "1";
-    }
-  });
-
-  document.addEventListener("mouseup", (event) => {
-    event.preventDefault();
-    if (isDragging) {
-      const PosAndIndex = clacPosAndIndex(
-        gameBoard,
-        event.clientX,
-        event.clientY,
-      );
-      // position the ship in the gamebord accurately
-      gameBoard.appendChild(draggedShip);
-      draggedShip.style.position = "absolute";
-      draggedShip.style.top = PosAndIndex.yPos + "%";
-      draggedShip.style.left = PosAndIndex.xPos + "%";
-
-      isDragging = false;
-      draggedShip = null;
-      offsetX = null;
-      offsetY = null;
     }
   });
 }
@@ -215,22 +236,6 @@ function clacPosAndIndex(gameBoard, mouseX, mouseY) {
     yPos: y,
     gameBoradIndex: index,
   };
-}
-
-function hasParentWithClass(element, className) {
-  let currentElement = element;
-
-  while (currentElement !== null) {
-    if (
-      currentElement.classList &&
-      currentElement.classList.contains(className)
-    ) {
-      return currentElement;
-    }
-    currentElement = currentElement.parentElement;
-  }
-
-  return false;
 }
 
 export { getShipsPoses };
