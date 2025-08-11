@@ -157,37 +157,22 @@ function reviveShips() {
       const shipId = e.target.id.substring(5);
       const ship = document.getElementById(shipId);
       if (shipsDiv.contains(ship)) {
-        const currentRotation = getRotationDegrees(ship);
-        const newRotation = currentRotation + 90;
-        ship.style.transform = `rotate(${newRotation}deg)`;
+        if (ship.classList.contains("rotated")) {
+          ship.style.transform = `rotate(0deg)`;
+          ship.classList.remove("rotated");
+        } else {
+          ship.style.transform = `rotate(90deg)`;
+          ship.classList.add("rotated");
 
-        ship.style.position = "relative";
-        ship.style.top = "100%";
-        ship.style.left = "100%";
-        ship.style.transformOrigin = "center";
-        ship.style.zIndex = "1";
+          ship.style.position = "relative";
+          ship.style.top = "100%";
+          ship.style.left = "100%";
+          ship.style.transformOrigin = "center";
+          ship.style.zIndex = "1";
+        }
       }
     }
   });
-}
-
-function getRotationDegrees(element) {
-  const style = window.getComputedStyle(element);
-  const transform = style.transform;
-
-  if (transform === "none") return 0;
-
-  // The transform matrix looks like: matrix(a, b, c, d, tx, ty)
-  const values = transform.match(/matrix\(([^)]+)\)/)[1].split(", ");
-  const a = parseFloat(values[0]);
-  const b = parseFloat(values[1]);
-
-  // Calculate the angle in degrees
-  const radians = Math.atan2(b, a);
-  const degrees = Math.round(radians * (180 / Math.PI));
-
-  // Ensure degrees is always a positive rotation between 0–359
-  return (degrees + 360) % 360;
 }
 
 function clacPosAndIndex(gameBoard, mouseX, mouseY) {
