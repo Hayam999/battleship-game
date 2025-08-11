@@ -98,16 +98,18 @@ function reviveShips() {
   });
   placeShipsDiv.addEventListener("mousemove", (e) => {
     if (isDragging) {
-      const rect = draggedShip.getBoundingClientRect();
-      const oldW = rect.height;
-      const oldH = rect.width;
-      const movingX = oldW / 2 - oldH / 2;
+      if (draggedShip.classList.contains("rotated")) {
+        const rect = draggedShip.getBoundingClientRect();
+        const oldW = rect.height;
+        const oldH = rect.width;
+        const movingX = oldW / 2 - oldH / 2;
 
-      draggedShip.style.left = e.clientX - movingX + "px";
-      draggedShip.style.top = e.clientY + movingX + "px";
-
-      // draggedShip.style.left = e.clientX + "px";
-      // draggedShip.style.top = e.clientY + "px";
+        draggedShip.style.left = e.clientX - movingX + "px";
+        draggedShip.style.top = e.clientY + movingX + "px";
+      } else {
+        draggedShip.style.left = e.clientX + "px";
+        draggedShip.style.top = e.clientY + "px";
+      }
     }
   });
 
@@ -128,20 +130,23 @@ function reviveShips() {
           event.clientY,
         );
         // position the ship in the gamebord accurately
-        const n = calcNewPos(
-          PosAndIndex.xInPx,
-          PosAndIndex.yInPx,
-          draggedShip,
-          gameBoard,
-        );
+
         gameBoard.appendChild(draggedShip);
         draggedShip.style.position = "absolute";
-        draggedShip.style.top = n.y + "%";
-        draggedShip.style.left = n.x + "%";
 
-        // draggedShip.style.top = PosAndIndex.yPos + "%";
-        // draggedShip.style.left = PosAndIndex.xPos + "%";
-        console.log(`X: ${PosAndIndex.xPos} \n Y: ${PosAndIndex.yPos}`);
+        if (draggedShip.classList.contains("rotated")) {
+          const n = calcNewPos(
+            PosAndIndex.xInPx,
+            PosAndIndex.yInPx,
+            draggedShip,
+            gameBoard,
+          );
+          draggedShip.style.top = n.y + "%";
+          draggedShip.style.left = n.x + "%";
+        } else {
+          draggedShip.style.top = PosAndIndex.yPos + "%";
+          draggedShip.style.left = PosAndIndex.xPos + "%";
+        }
 
         isDragging = false;
         draggedShip = null;
