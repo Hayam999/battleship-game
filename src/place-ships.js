@@ -98,8 +98,16 @@ function reviveShips() {
   });
   placeShipsDiv.addEventListener("mousemove", (e) => {
     if (isDragging) {
-      draggedShip.style.left = e.clientX - offsetX + "px";
-      draggedShip.style.top = e.clientY - offsetY + "px";
+      const rect = draggedShip.getBoundingClientRect();
+      const oldW = rect.height;
+      const oldH = rect.width;
+      const movingX = oldW / 2 - oldH / 2;
+
+      draggedShip.style.left = e.clientX - movingX + "px";
+      draggedShip.style.top = e.clientY + movingX + "px";
+
+      // draggedShip.style.left = e.clientX + "px";
+      // draggedShip.style.top = e.clientY + "px";
     }
   });
 
@@ -120,10 +128,20 @@ function reviveShips() {
           event.clientY,
         );
         // position the ship in the gamebord accurately
+        const n = calcNewPos(
+          PosAndIndex.xInPx,
+          PosAndIndex.yInPx,
+          draggedShip,
+          gameBoard,
+        );
         gameBoard.appendChild(draggedShip);
         draggedShip.style.position = "absolute";
-        draggedShip.style.top = PosAndIndex.yPos + "%";
-        draggedShip.style.left = PosAndIndex.xPos + "%";
+        draggedShip.style.top = n.y + "%";
+        draggedShip.style.left = n.x + "%";
+
+        // draggedShip.style.top = PosAndIndex.yPos + "%";
+        // draggedShip.style.left = PosAndIndex.xPos + "%";
+        console.log(`X: ${PosAndIndex.xPos} \n Y: ${PosAndIndex.yPos}`);
 
         isDragging = false;
         draggedShip = null;
@@ -218,6 +236,8 @@ function clacPosAndIndex(gameBoard, mouseX, mouseY) {
     xPos: x,
     yPos: y,
     gameBoradIndex: index,
+    xInPx: xInVw * vwUnitValueInPxls,
+    yInPx: yInVh * vhUnitValueInPxls,
   };
 }
 
@@ -235,6 +255,23 @@ function hasParentWithClass(element, className) {
   }
 
   return false;
+}
+
+// return new (x,y) poses for the ship after rotation, using the (x,y) poses returned by calcPosAndIndex
+// Why? Because the old position was accurate for the horizontal ship but it does not suit the vertical ship
+function calcNewPos(oldX, oldY, ship, gameboard) {
+  const boardRect = gameboard.getBoundingClientRect();
+
+  const rect = ship.getBoundingClientRect();
+  const oldWidth = rect.height;
+  const oldHeight = rect.width;
+
+  const xInPx = oldX - (oldWidth / 2 - oldHeight / 2);
+  const yInPx = oldY + (oldWidth / 2 - oldHeight / 2);
+
+  const newX = (xInPx * 100) / boardRect.width;
+  const newY = (yInPx * 100) / boardRect.height;
+  return { x: newX, y: newY };
 }
 
 export { getShipsPoses };
