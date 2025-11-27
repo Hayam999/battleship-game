@@ -1,6 +1,6 @@
-import "./style.css";
+import "../style.css";
 import { controlGameFlow } from "./game-flow";
-import { getShipsPoses } from "./place-ships";
+import { getShipsPoses } from "./ui-logic/place-ships.js";
 
 const startButtonContainer = document.querySelector(".start-button-container");
 const startBtn = document.querySelector(".start-button");

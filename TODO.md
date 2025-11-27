@@ -1,3 +1,12 @@
+---------------- Tasks from Nov 27, 2025 -----------
+
+TODO Make the ui interacts with the backend to tell them with all updates from creating ships to updating there positions after the mouseDown event that happens to them
+
+
+
+---
+
+------------ Previous Tasks ---------------
 // [ ] DEFINE reviveShips()
 // NOTE: | keep the neighbouring rules, there must be at lest 1 cell between all cells from all sides
 // [ ] | Store the ship's x and y position in your game data
