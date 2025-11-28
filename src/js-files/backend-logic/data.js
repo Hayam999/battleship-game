@@ -1,45 +1,11 @@
-function Ship(name, length) {
-  // Private function
-  function place(callback, matrix, location) {
-    let start = location[0];
-    let end = location[1];
-    for (let i = 0; i < length; i++) {
-      if (skippedEnd(start, end)) {
-        throw new Error("Can't place the ship beyond given end position");
-      } else {
-        let x = start[0];
-        let y = start[1];
-
-        if (matrix[x][y] === "") {
-          matrix[x][y] = name;
-          let newPos = callback(x, y);
-          start = newPos; // Update start position for next iteration
-        } else {
-          throw new Error("Ships overlapping");
-        }
-      }
-    }
-    return matrix;
-  }
-
-  function skippedEnd(start, end) {
-    // For horizontal placement (same x)
-    if (start[0] === end[0] && start[1] > end[1]) {
-      return true;
-    }
-    // For vertical placement (same y)
-    if (start[1] === end[1] && start[0] > end[0]) {
-      return true;
-    }
-    return false;
-  }
-
+function Ship(name, length, index, dir) {
   return {
-    name,
-    length,
+    name: name,
+    length: length,
     hitNum: 0,
     sunk: false,
-    location: null,
+    index: index,
+    dirctions: dir,
 
     hit() {
       if (this.hitNum < this.length) {
@@ -54,40 +20,14 @@ function Ship(name, length) {
     isSunk() {
       return this.hitNum >= this.length;
     },
-
-    placeHorizontally(matrix, location) {
-      // For horizontal placement, y increases (move right)
-      return place((x, y) => [x, y + 1], matrix, location);
-    },
-
-    placeVertically(matrix, location) {
-      // For vertical placement, x increases (move down)
-      return place((x, y) => [x + 1, y], matrix, location);
-    },
   };
 }
-function GameBoard() {
-  // initialize the 5 ships to start the game
-  function createShips() {
-    let carrier = Ship("Carrier", 5);
-    let battleship = Ship("BattleShip", 4);
-    let cruiser = Ship("Cruiser", 3);
-    let submarine = Ship("Submarine", 3);
-    let destroy = Ship("Destroy", 2);
-
-    return {
-      carrier: carrier,
-      battleship: battleship,
-      cruiser: cruiser,
-      submarine: submarine,
-      destroy: destroy,
-    };
-  }
+function GameBoard(ships) {
   return {
     matrix: Array(10)
       .fill()
       .map(() => Array(10).fill("")),
-    ships: createShips(),
+    ships: ships,
 
     placeShip(name, location) {
       let shipToPlace = this.ships[name];

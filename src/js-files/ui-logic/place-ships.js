@@ -4,13 +4,28 @@ import {
   createPlacingShipsRules,
 } from "./create-ui.js";
 
-const shipsDic = {
-  carrier: 5,
-  battleShip: 4,
-  cruiser: 3,
-  submarine: 3,
-  destroy: 2,
-};
+import { Ship } from "../backend-logic/data.js";
+
+// create raw data for ships presence
+const shipsDic = [
+  { name: "carrier", length: 5 },
+  { name: "battleShip", length: 4 },
+  { name: "cruiser", length: 3 },
+  { name: "submarine", length: 3 },
+  { name: "destroy", length: 2 },
+];
+
+// store each single ship with its metadata in a dictionary
+const shipsDb = {};
+
+for (let i = 0; i < shipsDic.length; i++) {
+  const ship = shipsDic[i];
+  const newKey = ship.name;
+  const newShip = Ship(ship.name, ship.length, null, null);
+  shipsDb[newKey] = newShip;
+}
+
+// create ui data for ships presence
 const HEIGHT = 20;
 const WIDTH = 50;
 const styles = getComputedStyle(document.documentElement);
@@ -79,11 +94,14 @@ function reviveShips() {
   const shipsDiv = document.getElementById("ships-div");
   let isDragging = false;
   let draggedShip;
+  let draggedShipName;
   let offsetX, offsetY;
 
   placeShipsDiv.addEventListener("mousedown", (e) => {
     e.preventDefault();
     const parent = hasParentWithClass(e.target, "ship-container");
+    draggedShipName = parent.id;
+
     if (parent) {
       isDragging = true;
       draggedShip = parent;
@@ -129,6 +147,10 @@ function reviveShips() {
           event.clientX,
           event.clientY,
         );
+        const currentShip = shipsDb[draggedShipName];
+
+        currentShip.index = PosAndIndex.gameBoradIndex;
+
         // position the ship in the gamebord accurately
 
         gameBoard.appendChild(draggedShip);

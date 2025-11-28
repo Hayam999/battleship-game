@@ -1,6 +1,10 @@
 ---------------- Tasks from Nov 27, 2025 -----------
 
 TODO Make the ui interacts with the backend to tell them with all updates from creating ships to updating there positions after the mouseDown event that happens to them
+COMPLETE --- create data for ships and update ship index after positioning
+TODO     +++ create data for gameboard to be responsible for all the updates of the ships and there positions and hits and sinks and that staff not just the ui gameboard there must be an object created from the data.js file 
+? where the data will be saved? on the browser or on the machine or not save it at all
+
 
 
 
