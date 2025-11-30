@@ -4,7 +4,7 @@ import {
   createPlacingShipsRules,
 } from "./create-ui.js";
 
-import { Ship } from "../backend-logic/data.js";
+import { Ship, GameBoard } from "../backend-logic/data.js";
 
 // create raw data for ships presence
 const shipsDic = [
@@ -16,40 +16,36 @@ const shipsDic = [
 ];
 
 // store each single ship with its metadata in a dictionary
-const shipsDb = {};
+const shipsTable = {};
 
 for (let i = 0; i < shipsDic.length; i++) {
   const ship = shipsDic[i];
   const newKey = ship.name;
-  const newShip = Ship(ship.name, ship.length, null, null);
-  shipsDb[newKey] = newShip;
+  const newShip = Ship(ship.name, ship.length, null, "h");
+  shipsTable[newKey] = newShip;
 }
 
+const gameBoardTable = GameBoard(shipsTable);
+
 // create ui data for ships presence
-const HEIGHT = 20;
-const WIDTH = 50;
-const styles = getComputedStyle(document.documentElement);
+// const HEIGHT = 20;
+// const WIDTH = 50;
+// const styles = getComputedStyle(document.documentElement);
 
-async function getShipsPoses() {
-  return new Promise((resolve) => {
-    const positions = [];
-
-    // display GameBoard and ships and rules for the user to place their ships
+async function getPlayerGameBoard() {
+  try {
     renderUiToPlaceShips();
-
-    // add Draging and droping eventListeners to rendered ships
     reviveShips();
-
-    // RETURN all positions that user have chose
-    resolve([]);
-  });
+  } catch (error) {
+    console.error(`Failed to get Player Gameboard ${error}`);
+    throw error;
+  }
 }
 
 function renderUiToPlaceShips() {
-  //[] TODO style placeShipsDiv
   const placeShipsDiv = document.createElement("div");
   placeShipsDiv.id = "place-ships-div";
-  // GameBoard Section
+
   const gameBoardWrapper = document.createElement("div");
   gameBoardWrapper.id = "gameBoard-container";
   const gameBoardHeader = document.createElement("h3");
@@ -73,6 +69,14 @@ function renderUiToPlaceShips() {
   const rules = createPlacingShipsRules();
   rulesWrapper.append(rulesHeader, rules);
 
+  // let's play btn
+  const letsPlay = document.createElement("button");
+  letsPlay.id = "lets-play";
+  letsPlay.innerText = "Let's Play";
+  letsPlay.addEventListener("click", () => {
+    checkRules();
+  });
+
   // Ships Section
   const shipsWrapper = document.createElement("div");
   shipsWrapper.id = "ships-harbour";
@@ -84,7 +88,7 @@ function renderUiToPlaceShips() {
 
   shipsAndRulesWrapper.append(rulesWrapper, shipsWrapper);
 
-  placeShipsDiv.append(gameBoardWrapper, shipsAndRulesWrapper);
+  placeShipsDiv.append(gameBoardWrapper, shipsAndRulesWrapper, letsPlay);
   document.body.appendChild(placeShipsDiv);
 }
 
@@ -147,7 +151,7 @@ function reviveShips() {
           event.clientX,
           event.clientY,
         );
-        const currentShip = shipsDb[draggedShipName];
+        const currentShip = shipsTable[draggedShipName];
 
         currentShip.index = PosAndIndex.gameBoradIndex;
 
@@ -180,16 +184,21 @@ function reviveShips() {
 
   // rotating the ship functionality
   shipsDiv.addEventListener("click", (e) => {
+    // get ship from gameboard
+    // change dir accordingly
     if (e.target.classList.contains("turn-ship")) {
       const shipId = e.target.id.substring(5);
       const ship = document.getElementById(shipId);
+      const shipData = gameBoardTable.ships[shipId];
       if (shipsDiv.contains(ship)) {
         if (ship.classList.contains("rotated")) {
           ship.style.transform = `rotate(0deg)`;
+          shipData.dir = "h";
           ship.classList.remove("rotated");
         } else {
           ship.style.transform = `rotate(90deg)`;
           ship.classList.add("rotated");
+          shipData.dir = "v";
 
           ship.style.position = "relative";
           ship.style.top = "100%";
@@ -197,6 +206,7 @@ function reviveShips() {
           ship.style.transformOrigin = "center";
           ship.style.zIndex = "1";
         }
+        console.log(`${shipData.dir}`);
       }
     }
   });
@@ -286,4 +296,107 @@ function calcNewPos(oldX, oldY, ship, gameboard) {
   return { x: newX, y: newY };
 }
 
-export { getShipsPoses };
+function checkRules() {
+  // all ships must be within allowed grid cells
+  // No overlapping between ships
+  // all ships must be placed somewhere
+  // at least on grid around the whole ship must be empty
+
+  for (let i = 0; i < shipsDic.length; i++) {
+    const key = shipsDic[i].name;
+    const ship = gameBoardTable.ships[key];
+    const index = ship.index;
+    if (!index) {
+      return {
+        skipped: false,
+        msg: "All ships must take its place on the gameboard",
+      };
+    }
+    const indexArr = getIndexArr(ship);
+    const ValidBoundries = checkBoundries(indexArr, ship.name, ship.dir);
+    if (!ValidBoundries.skipped) {
+      return { skipped: false, msg: ValidBoundries.msg };
+    }
+    const validLocation = checkLocation(indexArr, ship);
+    if (!validLocation.skipped) {
+      return { skipped: false, msg: validLocation.msg };
+    }
+  }
+}
+
+/**
+ * @param indexArr => array of indecies on the grid.
+ * @param ship => the ship that occupies given indecies from indexArr on gameboard.
+ * --------------------------------------
+ * @purpose check given conditions:
+ * =======> 1) ship do not overlap with any other ship.
+ * =======> 2) ship has 1 there is at least 1 empty square around the ship from all directions except valid boundries.
+ * --------------------------------------
+ * @returns {skepped: boolean , msg: String explains proplem when skipped is false}
+ */
+
+function checkLocation(indexArr, ship) {
+  return true;
+}
+function checkBoundries(indexArr, name, dir) {
+  const first = indexArr[0];
+  const last = indexArr[indexArr.length - 1];
+
+  // assure first cell of ship doesn't land on the first row or the first column
+  if (first <= 10 || first % 11 == 0) {
+    return {
+      skipped: false,
+      msg: `The ship: ${name} starts off the gameboard`,
+    };
+  }
+
+  // assure last cell of ship isn't off gameboard
+  if (dir == "h") {
+    const firstIndexInRow = first - (first % 11);
+    const lastIndexInRow = firstIndexInRow + 10;
+    if (last > lastIndexInRow) {
+      return {
+        skipped: false,
+        msg: `The ship: ${name} ends off the gameboard`,
+      };
+    }
+  } else if (dir == "v") {
+    if (last > 120) {
+      return {
+        skipped: false,
+        msg: `The ship: ${name} ends off the gameboard`,
+      };
+    }
+  } else {
+    return {
+      skipped: false,
+      msg: `The ship: ${name} don't have a valid direction`,
+    };
+  }
+  return { skipped: true, msg: "" };
+}
+
+function getIndexArr(ship) {
+  let step;
+  let indexArr = [];
+  console.log(ship);
+  console.log(ship.dir);
+  if (ship.dir == "h") {
+    step = 1;
+  } else if (ship.dir == "v") {
+    step = 11;
+  } else {
+    return {
+      msg: "ship doesn't have a valid dirction",
+      insructions: "Make sure the ship exists and it have a valid dirction",
+    };
+  }
+  let currentIndex = ship.index;
+  for (let i = 0; i < ship.length; i++) {
+    indexArr.push(currentIndex);
+    currentIndex = currentIndex + step;
+  }
+  return indexArr;
+}
+
+export { getPlayerGameBoard };

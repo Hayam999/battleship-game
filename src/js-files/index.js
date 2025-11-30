@@ -1,6 +1,6 @@
 import "../style.css";
 import { controlGameFlow } from "./game-flow";
-import { getShipsPoses } from "./ui-logic/place-ships.js";
+import { getPlayerGameBoard } from "./ui-logic/place-ships.js";
 
 const startButtonContainer = document.querySelector(".start-button-container");
 const startBtn = document.querySelector(".start-button");
@@ -54,7 +54,7 @@ async function startGame() {
   if (playerName) {
     backgroundDiv.remove();
     startBtn.remove();
-    const positions = await getShipsPoses();
+    const playerGB = await getPlayerGameBoard();
     // TODO create a player object or pass the name to a function that does that for you and use positions to create the gameBord that is for the player
     // TODO keep the game flow and hand it to another function that is not startGame
   } else {
