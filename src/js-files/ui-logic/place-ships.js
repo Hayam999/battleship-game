@@ -3,12 +3,8 @@ import {
   createGameBoard,
   createPlacingShipsRules,
 } from "./create-ui.js";
-
 import { Ship, GameBoard, shipsDic } from "../backend-logic/data.js";
 
-// create raw data for ships presence
-
-// store each single ship with its metadata in a dictionary
 const shipsTable = {};
 
 for (let i = 0; i < shipsDic.length; i++) {
@@ -17,15 +13,38 @@ for (let i = 0; i < shipsDic.length; i++) {
   const newShip = Ship(ship.name, ship.length, null, "h");
   shipsTable[newKey] = newShip;
 }
-
 const gameBoardTable = GameBoard(shipsTable);
+let placementController = null;
 
-console.log(gameBoardTable.matrix);
+// -------------------------------------------------- \\
+
+const letsPlay = document.createElement("button");
+letsPlay.id = "lets-play";
+letsPlay.innerText = "Let's Play";
+const placeShipsDiv = document.createElement("div");
+placeShipsDiv.id = "place-ships-div";
+const gameBoard = createGameBoard();
+gameBoard.id = "placing-ships-gameBoard";
+gameBoard.style.position = "relative";
 
 async function getPlayerGameBoard() {
   try {
     renderUiToPlaceShips();
-    reviveShips();
+    placementController = new AbortController();
+    reviveShips(placementController.signal);
+
+    const result = await new Promise((resolve) => {
+      letsPlay.addEventListener(
+        "click",
+        () => {
+          cleanupPlacementListeners();
+          placeShipsDiv.remove();
+          resolve({ rawData: gameBoardTable, uiData: gameBoard });
+        },
+        { once: true },
+      );
+    });
+    return result;
   } catch (error) {
     console.error(`Failed to get Player Gameboard ${error}`);
     throw error;
@@ -33,17 +52,12 @@ async function getPlayerGameBoard() {
 }
 
 function renderUiToPlaceShips() {
-  const placeShipsDiv = document.createElement("div");
-  placeShipsDiv.id = "place-ships-div";
-
   const gameBoardWrapper = document.createElement("div");
   gameBoardWrapper.id = "gameBoard-container";
   const gameBoardHeader = document.createElement("h3");
   gameBoardHeader.id = "gameBoard-header";
   gameBoardHeader.innerText = "Game Board";
-  const gameBoard = createGameBoard();
-  gameBoard.id = "placing-ships-gameBoard";
-  gameBoard.style.position = "relative";
+
   gameBoardWrapper.append(gameBoardHeader, gameBoard);
 
   // Rules And Ships Section
@@ -60,12 +74,6 @@ function renderUiToPlaceShips() {
   rulesWrapper.append(rulesHeader, rules);
 
   // let's play btn
-  const letsPlay = document.createElement("button");
-  letsPlay.id = "lets-play";
-  letsPlay.innerText = "Let's Play";
-  letsPlay.addEventListener("click", () => {
-    // don't check the rules i've checked it previousely just return and make the flag to start the game
-  });
 
   // Ships Section
   const shipsWrapper = document.createElement("div");
@@ -82,127 +90,141 @@ function renderUiToPlaceShips() {
   document.body.appendChild(placeShipsDiv);
 }
 
-function reviveShips() {
+function reviveShips(signal) {
   const placeShipsDiv = document.getElementById("place-ships-div");
-  const gameBoard = document.getElementById("placing-ships-gameBoard");
   const shipsDiv = document.getElementById("ships-div");
   let isDragging = false;
   let draggedShip;
   let draggedShipName;
   let offsetX, offsetY;
 
-  placeShipsDiv.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    const parent = hasParentWithClass(e.target, "ship-container");
-    draggedShipName = parent.id;
+  placeShipsDiv.addEventListener(
+    "mousedown",
+    (e) => {
+      e.preventDefault();
+      const parent = hasParentWithClass(e.target, "ship-container");
+      draggedShipName = parent.id;
 
-    if (parent) {
-      isDragging = true;
-      draggedShip = parent;
-      const rect = parent.getBoundingClientRect();
-      offsetX = e.clientX - rect.left;
-      offsetY = e.clientY - rect.top;
+      if (parent) {
+        isDragging = true;
+        draggedShip = parent;
+        const rect = parent.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
 
-      draggedShip.style.position = "fixed";
-      draggedShip.style.left = e.clientX - offsetX + "px";
-      draggedShip.style.top = e.clientY - offsetY + "px";
-    }
-  });
-  placeShipsDiv.addEventListener("mousemove", (e) => {
-    if (isDragging) {
-      if (draggedShip.classList.contains("rotated")) {
-        const rect = draggedShip.getBoundingClientRect();
-        const oldW = rect.height;
-        const oldH = rect.width;
-        const movingX = oldW / 2 - oldH / 2;
-
-        draggedShip.style.left = e.clientX - movingX + "px";
-        draggedShip.style.top = e.clientY + movingX + "px";
-      } else {
-        draggedShip.style.left = e.clientX + "px";
-        draggedShip.style.top = e.clientY + "px";
+        draggedShip.style.position = "fixed";
+        draggedShip.style.left = e.clientX - offsetX + "px";
+        draggedShip.style.top = e.clientY - offsetY + "px";
       }
-    }
-  });
-
-  placeShipsDiv.addEventListener("mouseup", (event) => {
-    event.preventDefault();
-
-    if (isDragging) {
-      const gameBoardRec = gameBoard.getBoundingClientRect();
-      if (
-        event.clientX >= gameBoardRec.left &&
-        event.clientX <= gameBoardRec.right &&
-        event.clientY >= gameBoardRec.top &&
-        event.clientY <= gameBoardRec.bottom
-      ) {
-        const PosAndIndex = clacPosAndIndex(
-          gameBoard,
-          event.clientX,
-          event.clientY,
-        );
-
-        const currentShip = shipsTable[draggedShipName];
-        currentShip.updateLocation(PosAndIndex.gameBoradIndex);
-        const addShip = gameBoardTable.addShip(currentShip);
-        if (!addShip) {
-          return;
-        }
-
-        // position the ship in the gamebord responsively
-        gameBoard.appendChild(draggedShip);
-        draggedShip.style.position = "absolute";
-
+    },
+    { signal },
+  );
+  placeShipsDiv.addEventListener(
+    "mousemove",
+    (e) => {
+      if (isDragging) {
         if (draggedShip.classList.contains("rotated")) {
-          const n = calcNewPos(
-            PosAndIndex.xInPx,
-            PosAndIndex.yInPx,
-            draggedShip,
-            gameBoard,
-          );
-          draggedShip.style.top = n.y + "%";
-          draggedShip.style.left = n.x + "%";
-        } else {
-          draggedShip.style.top = PosAndIndex.yPos + "%";
-          draggedShip.style.left = PosAndIndex.xPos + "%";
-        }
+          const rect = draggedShip.getBoundingClientRect();
+          const oldW = rect.height;
+          const oldH = rect.width;
+          const movingX = oldW / 2 - oldH / 2;
 
-        isDragging = false;
-        draggedShip = null;
-        offsetX = null;
-        offsetY = null;
+          draggedShip.style.left = e.clientX - movingX + "px";
+          draggedShip.style.top = e.clientY + movingX + "px";
+        } else {
+          draggedShip.style.left = e.clientX + "px";
+          draggedShip.style.top = e.clientY + "px";
+        }
       }
-    }
-  });
+    },
+    { signal },
+  );
+
+  placeShipsDiv.addEventListener(
+    "mouseup",
+    (event) => {
+      event.preventDefault();
+
+      if (isDragging) {
+        const gameBoardRec = gameBoard.getBoundingClientRect();
+        if (
+          event.clientX >= gameBoardRec.left &&
+          event.clientX <= gameBoardRec.right &&
+          event.clientY >= gameBoardRec.top &&
+          event.clientY <= gameBoardRec.bottom
+        ) {
+          const PosAndIndex = clacPosAndIndex(
+            gameBoard,
+            event.clientX,
+            event.clientY,
+          );
+
+          const currentShip = shipsTable[draggedShipName];
+          currentShip.updateLocation(PosAndIndex.gameBoradIndex);
+          const addShip = gameBoardTable.addShip(currentShip);
+          if (!addShip) {
+            return;
+          }
+
+          // position the ship in the gamebord responsively
+          gameBoard.appendChild(draggedShip);
+          draggedShip.style.position = "absolute";
+
+          if (draggedShip.classList.contains("rotated")) {
+            const n = calcNewPos(
+              PosAndIndex.xInPx,
+              PosAndIndex.yInPx,
+              draggedShip,
+              gameBoard,
+            );
+            draggedShip.style.top = n.y + "%";
+            draggedShip.style.left = n.x + "%";
+          } else {
+            draggedShip.style.top = PosAndIndex.yPos + "%";
+            draggedShip.style.left = PosAndIndex.xPos + "%";
+          }
+
+          isDragging = false;
+          draggedShip = null;
+          offsetX = null;
+          offsetY = null;
+        }
+      }
+    },
+    { signal },
+  );
 
   // rotating the ship functionality
-  shipsDiv.addEventListener("click", (e) => {
-    // get ship from gameboard
-    // change dir accordingly
-    if (e.target.classList.contains("turn-ship")) {
-      const shipId = e.target.id.substring(5);
-      const ship = document.getElementById(shipId);
-      const shipData = gameBoardTable.ships[shipId];
-      if (shipsDiv.contains(ship)) {
-        if (ship.classList.contains("rotated")) {
-          ship.style.transform = `rotate(0deg)`;
-          shipData.dir = "h";
-          ship.classList.remove("rotated");
-        } else {
-          ship.style.transform = `rotate(90deg)`;
-          ship.classList.add("rotated");
-          shipData.dir = "v";
+  shipsDiv.addEventListener(
+    "click",
+    (e) => {
+      // get ship from gameboard
+      // change dir accordingly
+      if (e.target.classList.contains("turn-ship")) {
+        const shipId = e.target.id.substring(5);
+        const ship = document.getElementById(shipId);
+        const shipData = gameBoardTable.ships[shipId];
+        if (shipsDiv.contains(ship)) {
+          if (ship.classList.contains("rotated")) {
+            ship.style.transform = `rotate(0deg)`;
+            shipData.dir = "h";
+            ship.classList.remove("rotated");
+          } else {
+            ship.style.transform = `rotate(90deg)`;
+            ship.classList.add("rotated");
+            shipData.dir = "v";
 
-          ship.style.position = "relative";
-          ship.style.top = "100%";
-          ship.style.left = "100%";
-          ship.style.transformOrigin = "center";
-          ship.style.zIndex = "1";
+            ship.style.position = "relative";
+            ship.style.top = "100%";
+            ship.style.left = "100%";
+            ship.style.transformOrigin = "center";
+            ship.style.zIndex = "1";
+          }
         }
-        console.log(`${shipData.dir}`);
       }
-    }
-  });
+    },
+    { signal },
+  );
 }
 
 function clacPosAndIndex(gameBoard, mouseX, mouseY) {
@@ -290,5 +312,12 @@ function calcNewPos(oldX, oldY, ship, gameboard) {
 }
 
 //////////////////////////////
+
+function cleanupPlacementListeners() {
+  if (placementController) {
+    placementController.abort();
+    placementController = null;
+  }
+}
 
 export { getPlayerGameBoard };

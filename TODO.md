@@ -2,7 +2,12 @@
 
 TODO Make the ui interacts with the backend to tell them with all updates from creating ships to updating there positions after the mouseDown event that happens to them
 COMPLETE --- create data for ships and update ship index after positioning
-TODO     +++ create data for gameboard to be responsible for all the updates of the ships and there positions and hits and sinks and that staff not just the ui gameboard there must be an object created from the data.js file 
+COMPLETE    +++ create data for gameboard to be responsible for all the updates of the ships and there positions and hits and sinks and that staff not just the ui gameboard there must be an object created from the data.js file 
+
+FIX Check Rules can't read this.matrix or self.matrix because they are nested function. 
+NOTE1 => Solve this problem whether by being it not as nested or with any other way.
+NOTE2 => Rerun the program to grasp the bug more.
+
 ? where the data will be saved? on the browser or on the machine or not save it at all
 
 

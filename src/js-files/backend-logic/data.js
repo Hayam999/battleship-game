@@ -37,7 +37,6 @@ function Ship(name, length, index, dir) {
   };
 }
 function GameBoard(ships) {
-  const self = this;
   const matrix = [];
   for (let i = 0; i < 11; i++) {
     const subMatrix = [];
@@ -79,11 +78,8 @@ function GameBoard(ships) {
     if (dir == "h") {
       const firstIndexInRow = first - (first % 11);
       const lastIndexInRow = firstIndexInRow + 10;
-      console.log(
-        `First Index in the Row = ${firstIndexInRow} \n Last Index In the row = ${lastIndexInRow}`,
-      );
+
       if (last > lastIndexInRow) {
-        console.log(`Last is greater that last index in the row`);
         return false;
       }
     } else if (dir == "v") {
@@ -107,19 +103,25 @@ function GameBoard(ships) {
    * --------------------------------------
    * @returns boolean
    */
-  const checkSpaceAroundShip = (ship) => {
+  const checkSpaceAroundShip = (ship, matrix, indexArr) => {
     const x = ship.pos["x"];
     const y = ship.pos["y"];
     const d = ship.dir;
     const commonCase = x > 1 && x < 10 && y > 1 && y < 10;
-    const checkUp = (x, y, d) => {
+    const checkUp = (x, y, d, matrix) => {
       if (d == "v") {
-        const cell = self.matrix[x - 1][y];
+        const cell = matrix[x - 1][y];
+        if (!cell) {
+          return true;
+        }
         return cell.ship === "";
       } else if (d == "h") {
         let result = true;
         for (let i = 0; i < ship.length; i++) {
-          const cell = self.matrix[x - 1][y + i];
+          const cell = matrix[x - 1][y + i];
+          if (!cell) {
+            continue;
+          }
           result = result && cell.ship === "";
         }
         return result;
@@ -127,14 +129,20 @@ function GameBoard(ships) {
         return false;
       }
     };
-    const checkDown = (x, y, d) => {
+    const checkDown = (x, y, d, matrix) => {
       if (d == "v") {
-        const cell = self.matrix[x + 1][y];
+        const cell = matrix[x + 1][y];
+        if (!cell) {
+          return true;
+        }
         return cell.ship === "";
       } else if (d == "h") {
         let result = true;
         for (let i = 0; i < ship.length; i++) {
           const cell = matrix[x + 1][y + i];
+          if (!cell) {
+            continue;
+          }
           result = result && cell.ship === "";
         }
         return result;
@@ -142,64 +150,104 @@ function GameBoard(ships) {
         return false;
       }
     };
-    const checkRight = (x, y, d) => {
+    const checkRight = (x, y, d, matrix) => {
       if (d == "v") {
         let result = true;
         for (let i = 0; i < ship.length; i++) {
-          const cell = self.matrix[x + i][y + 1];
+          const cell = matrix[x + i][y + 1];
+          if (!cell) {
+            continue;
+          }
           result = result && cell.ship === "";
         }
         return result;
       } else if (d == "h") {
-        const cell = self.matrix[x][y + 1];
+        const cell = matrix[x][y + 1];
+        if (!cell) {
+          return true;
+        }
         return cell.ship === "";
       } else {
         return false;
       }
     };
-    const checkLeft = (x, y, d) => {
+    const checkLeft = (x, y, d, matrix) => {
       if (d == "v") {
         let result = true;
         for (let i = 0; i < ship.length; i++) {
-          const cell = self.matrix[x - 1][y + i];
+          const cell = matrix[x - 1][y + i];
+          if (!cell) {
+            continue;
+          }
           result = result && cell.ship === "";
         }
         return result;
       }
       if (d == "h") {
-        const cell = self.matrix[x][y - 1];
+        const cell = matrix[x][y - 1];
+        if (!cell) {
+          return true;
+        }
         return cell.ship === "";
       } else {
         return false;
       }
     };
-    const checkAllCourners = (x, y, d) => {
+    const checkAllCourners = (x, y, d, matrix) => {
       return (
-        checkUp(x, y, d) &&
-        checkDown(x, y, d) &&
-        checkLeft(x, y, d) &&
-        checkRight(x, y, d)
+        checkUp(x, y, d, matrix) &&
+        checkDown(x, y, d, matrix) &&
+        checkLeft(x, y, d, matrix) &&
+        checkRight(x, y, d, matrix)
       );
     };
+    const lastIndex = indexArr[indexArr.length - 1];
+    const lastColCase = (lastIndex + 1) % 11 === 0;
 
-    if (commonCase) {
-      return checkAllCourners(x, y, d);
+    if (lastColCase && x == 10) {
+      return checkUp(x, y, d, matrix) && checkLeft(x, y, d, matrix);
+    } else if (lastColCase && x == 1) {
+      return checkDown(x, y, d, matrix) && checkLeft(x, y, d, matrix);
+    } else if (lastColCase) {
+      return (
+        checkUp(x, y, d, matrix) &&
+        checkDown(x, y, d, matrix) &&
+        checkLeft(x, y, d, matrix)
+      );
+    } else if (commonCase) {
+      return checkAllCourners(x, y, d, matrix);
     } else if (x == 1 && y == 1) {
-      return checkRight(x, y, d) && checkDown(x, y, d);
+      return checkRight(x, y, d, matrix) && checkDown(x, y, d, matrix);
     } else if (x == 1 && y == 10) {
-      return checkLeft(x, y, d) && checkDown(x, y, d);
+      return checkLeft(x, y, d, matrix) && checkDown(x, y, d, matrix);
     } else if (x == 10 && y == 1) {
-      return checkUp(x, y, d) && checkLeft(x, y, d);
+      return checkUp(x, y, d, matrix) && checkLeft(x, y, d, matrix);
     } else if (x == 10 && y == 10) {
-      return checkUp(x, y, d) && checkLeft(x, y, d);
+      return checkUp(x, y, d, matrix) && checkLeft(x, y, d, matrix);
     } else if (x == 1) {
-      return checkRight(x, y, d) && checkLeft(x, y, d) && checkDown(x, y, d);
+      return (
+        checkRight(x, y, d, matrix) &&
+        checkLeft(x, y, d, matrix) &&
+        checkDown(x, y, d, matrix)
+      );
     } else if (x == 10) {
-      return checkRight(x, y, d) && checkLeft(x, y, d) && checkUp(x, y, d);
+      return (
+        checkRight(x, y, d, matrix) &&
+        checkLeft(x, y, d, matrix) &&
+        checkUp(x, y, d, matrix)
+      );
     } else if (y == 1) {
-      return checkUp(x, y, d) && checkDown(x, y, d) && checkRight(x, y, d);
+      return (
+        checkUp(x, y, d, matrix) &&
+        checkDown(x, y, d, matrix) &&
+        checkRight(x, y, d, matrix)
+      );
     } else if (y == 10) {
-      return checkUp(x, y, d) && checkDown(x, y, d) && checkLeft(x, y, d);
+      return (
+        checkUp(x, y, d, matrix) &&
+        checkDown(x, y, d, matrix) &&
+        checkLeft(x, y, d, matrix)
+      );
     } else {
       return false;
     }
@@ -207,28 +255,27 @@ function GameBoard(ships) {
 
   /////////////////////////////////////
 
-  const checkRules = (ship) => {
-    for (let i = 0; i < shipsDic.length; i++) {
-      const indexArr = getIndexArr(ship);
-      const ValidBoundries = checkBoundries(indexArr, ship.dir);
-      if (!ValidBoundries) {
-        console.log("Problems came from checkBoundries");
-        return false;
-      }
-      const validSpaceAroundShip = checkSpaceAroundShip(ship);
-      if (!validSpaceAroundShip) {
-        console.log("Problems came from checkSpaceAroundShip");
-        return false;
-      }
-      return true;
+  const checkRules = (ship, matrix) => {
+    if (ship.pos["x"] == 0 || ship.pos["y"] == 0) {
+      return false;
     }
+    const indexArr = getIndexArr(ship);
+    const ValidBoundries = checkBoundries(indexArr, ship.dir);
+    if (!ValidBoundries) {
+      return false;
+    }
+    const validSpaceAroundShip = checkSpaceAroundShip(ship, matrix, indexArr);
+    if (!validSpaceAroundShip) {
+      return false;
+    }
+    return true;
   };
   /////////////////////////
   return {
     matrix: matrix,
     ships: ships,
     addShip(ship) {
-      const validLocation = checkRules(ship);
+      const validLocation = checkRules(ship, this.matrix);
       if (!validLocation) {
         return false;
       }
@@ -240,9 +287,9 @@ function GameBoard(ships) {
       for (let i = 0; i < ship.length; i++) {
         let cell;
         if (d == "v") {
-          cell = self.matrix[x + i][y];
+          cell = matrix[x + i][y];
         } else {
-          cell = self.matrix[x][y + i];
+          cell = matrix[x][y + i];
         }
         if (cell["ship"] === "") {
           cell["ship"] = ship.name;
