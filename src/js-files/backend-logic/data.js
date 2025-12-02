@@ -6,6 +6,19 @@ const shipsDic = [
   { name: "destroy", length: 2 },
 ];
 
+function createGameBoard() {
+  const shipsTable = {};
+
+  for (let i = 0; i < shipsDic.length; i++) {
+    const ship = shipsDic[i];
+    const newKey = ship.name;
+    const newShip = Ship(ship.name, ship.length, null, "h");
+    shipsTable[newKey] = newShip;
+  }
+  const gameBoardTable = GameBoard(shipsTable);
+  return gameBoardTable;
+}
+
 function Ship(name, length, index, dir) {
   return {
     name: name,
@@ -16,6 +29,9 @@ function Ship(name, length, index, dir) {
     pos: { x: null, y: null },
     dir: dir,
     updateLocation(i) {
+      if (i == null) {
+        return;
+      }
       this.index = i;
       this.pos["x"] = Math.floor(i / 11);
       this.pos["y"] = i - this.pos["x"] * 11;
@@ -299,8 +315,28 @@ function GameBoard(ships) {
       }
       return true;
     },
+    addComputerShip(ship) {
+      const x = ship.pos["x"];
+      const y = ship.pos["y"];
+      const d = ship.dir;
+      for (let i = 0; i < ship.length; i++) {
+        let cell;
+        if (d == "v") {
+          cell = matrix[x + i][y];
+        } else {
+          cell = matrix[x][y + i];
+        }
+        if (cell["ship"] === "") {
+          cell["ship"] = ship.name;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    },
   };
 }
+
 //     placeShip(name, location) {
 //       let shipToPlace = this.ships[name];
 //       // make sure user place the ship vertically or horizantally
@@ -349,4 +385,21 @@ function Player(type) {
   };
 }
 
-export { Ship, GameBoard, Player, shipsDic };
+function createArrayOfIndicies() {
+  const arr = [];
+  for (let i = 0; i < 121; i++) {
+    if (i > 10 && i % 11 !== 0) {
+      arr.push(i);
+    }
+  }
+  return arr;
+}
+
+export {
+  Ship,
+  GameBoard,
+  Player,
+  createGameBoard,
+  shipsDic,
+  createArrayOfIndicies,
+};

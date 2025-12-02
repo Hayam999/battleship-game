@@ -3,17 +3,10 @@ import {
   createGameBoard,
   createPlacingShipsRules,
 } from "./create-ui.js";
-import { Ship, GameBoard, shipsDic } from "../backend-logic/data.js";
+import { createGameBoard as CreateRawGameBoard } from "../backend-logic/data.js";
 
-const shipsTable = {};
+const gameBoardTable = CreateRawGameBoard();
 
-for (let i = 0; i < shipsDic.length; i++) {
-  const ship = shipsDic[i];
-  const newKey = ship.name;
-  const newShip = Ship(ship.name, ship.length, null, "h");
-  shipsTable[newKey] = newShip;
-}
-const gameBoardTable = GameBoard(shipsTable);
 let placementController = null;
 
 // -------------------------------------------------- \\
@@ -159,10 +152,11 @@ function reviveShips(signal) {
             event.clientY,
           );
 
-          const currentShip = shipsTable[draggedShipName];
+          const currentShip = gameBoardTable.ships[draggedShipName];
           currentShip.updateLocation(PosAndIndex.gameBoradIndex);
           const addShip = gameBoardTable.addShip(currentShip);
           if (!addShip) {
+            currentShip.updateLocation(null);
             return;
           }
 
