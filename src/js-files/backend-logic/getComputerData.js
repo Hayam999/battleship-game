@@ -7,7 +7,7 @@ import {
 function getComputerData() {
   const emptyGameBoard = CreateRawGameBoard();
   const filledGameBoard = fillGb(emptyGameBoard);
-  //   console.log(`Hello from computers Data ${filledGameBoard.ships}`);
+  console.log(filledGameBoard);
 }
 
 function fillGb(gb) {
@@ -91,19 +91,58 @@ function removeForbiddenArea(
   shipLength,
   shipDirection,
 ) {
+  const addForbiddenAreaAroundVerticalShip = (forbiddenValues, shipArray) => {
+    const oneCellUp = shipArray[0] - 11;
+    const oneCellDown = shipArray[shipLength - 1] + 11;
+    forbiddenValues.push(oneCellUp, oneCellDown);
+    for (let i = 0; i < shipLength; i++) {
+      const oneCellRight = shipArray[i] + 1;
+      const oneCellLeft = shipArray[i] - 1;
+      forbiddenValues.push(oneCellRight, oneCellLeft);
+    }
+  };
+
+  const addForbiddenAreaAroundHorizontalShip = (forbiddenValues, shipArray) => {
+    const firstShipCell = shipArray[0];
+    const oneCellRight = shipArray[shipLength - 1] + 1;
+    const oneCellLeft = firstShipCell - 1;
+    forbiddenValues.push(oneCellRight, oneCellLeft);
+    let firstCellUp = firstShipCell - 11;
+    let firstCellDown = firstShipCell + 11;
+
+    for (let i = 0; i < shipLength; i++) {
+      forbiddenValues.push(firstCellUp, firstCellDown);
+      firstCellUp++;
+      firstCellDown++;
+    }
+  };
+
+  const removeIndicies = (forbiddenValues) => {
+    for (let i = 0; i < forbiddenValues; i++) {
+      const toRemove = validIndices.indexOf(forbiddenValues[i]);
+      if (toRemove) {
+        validIndices.splice(toRemove, 1);
+      }
+    }
+  };
+
   if (shipDirection == "v") {
     const shipArray = [shipIndex];
     for (let i = 1; i < shipLength; i++) {
       const newIndex = shipIndex + 11 * i;
       shipArray.push(newIndex);
     }
-    for (let i = 0; i < shipLength; i++) {
-      const toRemove = validIndices.indexOf(shipArray[i]);
-      validIndices.splice(toRemove, 1);
-    }
+    const forbiddenValues = shipArray;
+    addForbiddenAreaAroundVerticalShip(forbiddenValues, shipArray);
+    removeIndicies(forbiddenValues);
   } else if (shipDirection == "h") {
-    const i = validIndices.indexOf(shipIndex);
-    validIndices.splice(i, shipLength);
+    const shipArray = [];
+    for (let i = 0; i < shipLength; i++) {
+      shipArray.push(shipIndex + i);
+    }
+    const forbiddenValues = shipArray;
+    addForbiddenAreaAroundHorizontalShip(forbiddenValues, shipArray);
+    removeIndicies(forbiddenValues);
   } else {
     throw new Error("Invalid ship direction");
   }
