@@ -54,7 +54,7 @@ async function getPlayerData() {
       backgroundDiv.remove();
       startBtn.remove();
       const playerData = await getPlayerGameBoard();
-      console.log(playerData.rawData);
+
       return {
         name: playerName,
         gameBoard: { rawData: playerData.rawData, uiData: playerData.uiData },

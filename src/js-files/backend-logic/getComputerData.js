@@ -3,14 +3,17 @@ import {
   shipsDic,
   createArrayOfIndicies,
 } from "./data.js";
-
+import { getComputerGameBoard } from "../ui-logic/place-ships.js";
 function getComputerData() {
   const emptyGameBoard = CreateRawGameBoard();
   const filledGameBoard = fillGb(emptyGameBoard);
-  console.log(filledGameBoard);
+  const gameBoardDiv = getComputerGameBoard(filledGameBoard);
+
+  document.body.append(gameBoardDiv);
 }
 
 function fillGb(gb) {
+  //TODO create random directions for each ship before adding them to the gameboard
   const validIndices = createArrayOfIndicies();
   for (let i = 0; i < shipsDic.length; i++) {
     const shipName = shipsDic[i].name;
@@ -20,6 +23,7 @@ function fillGb(gb) {
     removeForbiddenArea(validIndices, index, ship.length, ship.dir);
     gb.addComputerShip(ship);
   }
+  return gb;
 }
 //----------------------------------------------------------
 /*  @params:

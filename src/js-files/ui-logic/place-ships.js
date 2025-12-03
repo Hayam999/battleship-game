@@ -5,6 +5,24 @@ import {
 } from "./create-ui.js";
 import { createGameBoard as CreateRawGameBoard } from "../backend-logic/data.js";
 
+/**
+ * -------------------- Computer GameBoard --------------------
+ */
+function getComputerGameBoard(gb) {
+  const uiShips = createShips("computer");
+  const uiGb = createGameBoard();
+
+  /**
+   * 1) create uiGameBoard
+   * 2) insert each ship on the top of the cell in the appropriate index
+   * Note: you need to figure out the nameing of the gameboard so that you know what
+   */
+}
+
+/**
+ * -------------------- Human GameBoard --------------------
+ */
+
 const gameBoardTable = CreateRawGameBoard();
 
 let placementController = null;
@@ -30,6 +48,7 @@ async function getPlayerGameBoard() {
       letsPlay.addEventListener(
         "click",
         () => {
+          //TODO add condition for placing all ships before playing
           cleanupPlacementListeners();
           placeShipsDiv.remove();
           resolve({ rawData: gameBoardTable, uiData: gameBoard });
@@ -74,7 +93,7 @@ function renderUiToPlaceShips() {
   const shipsHeader = document.createElement("h3");
   shipsHeader.id = "ships-header";
   shipsHeader.innerText = "Ships";
-  const ships = createShips();
+  const ships = createShips("human");
   shipsWrapper.append(shipsHeader, ships);
 
   shipsAndRulesWrapper.append(rulesWrapper, shipsWrapper);
@@ -314,4 +333,4 @@ function cleanupPlacementListeners() {
   }
 }
 
-export { getPlayerGameBoard };
+export { getPlayerGameBoard, getComputerGameBoard };
