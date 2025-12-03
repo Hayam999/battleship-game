@@ -13,30 +13,23 @@ function getComputerData() {
 function fillGb(gb) {
   const validIndices = createArrayOfIndicies();
   for (let i = 0; i < shipsDic.length; i++) {
-    /**  1) choose random number from valid indices
-         2) 2.a) if Horizontal: add ship.len to index && assure value % 11 != 0
-             2.b) if vertical: add ship.len * 11 to index && assure <= 120
-         3) calculate forbidden area:
-            3.a) if vertical: think of logic for it
-            3.b) if horizontal: think of logic for it
-         4) remove forbidden area from validIndicies
-         5) call gb.addComputerShip(ship)
-         6) repeat until done
-        **/
     const shipName = shipsDic[i].name;
     const ship = gb.ships[shipName];
+    const index = pickRandomValidIndex(validIndices, ship.length, ship.dir);
+    ship.updateLocation(index);
+    removeForbiddenArea(validIndices, index, ship.length, ship.dir);
     gb.addComputerShip(ship);
   }
 }
-
+//----------------------------------------------------------
 /*  @params:
             validIndices: Array of empty indicies on the gameboard.
-            max: length of ValidIndicies Array.
             shipLength: len of the ship we pick a valid index for.
             shipDirection: direction of the same Ship.
     @returns: Integer => "random index for value in ValidIndicies. the value should suit the length and direction of the array"
  **/
-function pickRandomValidIndex(validIndices, max, shipLength, shipDirection) {
+function pickRandomValidIndex(validIndices, shipLength, shipDirection) {
+  const max = validIndices.length;
   const pickIndexOnSameHorizontalLine = () => {
     let keepTrying = true;
     let result;
@@ -82,4 +75,38 @@ function pickRandomValidIndex(validIndices, max, shipLength, shipDirection) {
     throw new Error("Invalid ship direction");
   }
 }
+
+//----------------------------------------------------------
+
+/*  @params:
+            validIndices: Array of empty indicies on the gameboard.
+            shipLength: the length of the ship for it we remove forbiddenArea from validIndices.
+            shipDirection: direction of the same Ship.
+    @purpose: remove the occupied area by the ship and around it from validIndices so that future ships won't have the option to occupy it.
+    @Side Effects: change given validIndices by removing some values.
+ **/
+function removeForbiddenArea(
+  validIndices,
+  shipIndex,
+  shipLength,
+  shipDirection,
+) {
+  if (shipDirection == "v") {
+    const shipArray = [shipIndex];
+    for (let i = 1; i < shipLength; i++) {
+      const newIndex = shipIndex + 11 * i;
+      shipArray.push(newIndex);
+    }
+    for (let i = 0; i < shipLength; i++) {
+      const toRemove = validIndices.indexOf(shipArray[i]);
+      validIndices.splice(toRemove, 1);
+    }
+  } else if (shipDirection == "h") {
+    const i = validIndices.indexOf(shipIndex);
+    validIndices.splice(i, shipLength);
+  } else {
+    throw new Error("Invalid ship direction");
+  }
+}
+
 export { getComputerData };
