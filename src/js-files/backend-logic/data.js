@@ -316,6 +316,15 @@ function GameBoard(ships) {
       }
       return true;
     },
+    humanPlacedAllShips() {
+      for (let i = 0; i < shipNames.length; i++) {
+        const currentShip = this.ships[shipNames[i]];
+        if (!currentShip.index) {
+          return false;
+        }
+      }
+      return true;
+    },
     addComputerShip(ship) {
       const x = ship.pos["x"];
       const y = ship.pos["y"];
