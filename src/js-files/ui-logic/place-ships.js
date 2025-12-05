@@ -3,15 +3,33 @@ import {
   createGameBoard,
   createPlacingShipsRules,
 } from "./create-ui.js";
-import { createGameBoard as CreateRawGameBoard } from "../backend-logic/data.js";
+import {
+  createGameBoard as CreateRawGameBoard,
+  shipNames,
+} from "../backend-logic/data.js";
 
 /**
  * -------------------- Computer GameBoard --------------------
  */
+
+/**
+ *
+ * @param {gb: GameBoard object filled with placed ships'}
+ */
 function getComputerGameBoard(gb) {
   const uiShips = createShips("computer");
   const uiGb = createGameBoard();
+  const rawShips = gb.ships;
 
+  shipNames.forEach((ship) => {
+    const currentShip = rawShips[ship];
+    const currentCell = uiGb.querySelector("#cell" + currentShip.index);
+    const currentUiShip = uiShips[ship];
+
+    currentCell.append(currentUiShip);
+  });
+  document.body.append(uiGb);
+  console.log("HI IM here");
   /**
    * 1) create uiGameBoard
    * 2) insert each ship on the top of the cell in the appropriate index

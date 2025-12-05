@@ -14,23 +14,26 @@ const cellGap = getComputedStyle(document.documentElement)
   .getPropertyValue("--cell-gap")
   .trim();
 
-export function createShips(user) {
+function createShips(user) {
   let result;
   if (user == "human") {
     const shipsDiv = document.createElement("div");
-    shipsDiv.id = "ships-div" + user;
+    shipsDiv.id = "ships-div" + "human";
     ships.forEach((ship) => {
       const currentShip = createHumanShip(ship[0], ship[1]);
       shipsDiv.appendChild(currentShip);
     });
     result = shipsDiv;
   } else if (user == "computer") {
-    const shipsArray = {};
+    const computerShips = {};
     ships.forEach((ship) => {
       const currentShip = createComputerShip(ship[0], ship[1]);
-      shipsArray.ship[0] = currentShip;
+      computerShips[ship[0]] = currentShip;
+      document.body.append(computerShips[ship[0]]);
+      console.log(computerShips[ship[0]]);
+      throw new Error("Hello");
     });
-    result = shipsArray;
+    result = computerShips;
   } else {
     throw new Error("Invalid ships request: User must be computer or human");
   }
@@ -38,11 +41,7 @@ export function createShips(user) {
 }
 
 function createComputerShip(name, numOfCells) {
-  const shipCover = document.createElement("div");
-  shipCover.className = "ship-cover";
-  shipCover.id = name + "-cover-div";
-  const shipContainer = createShip(name, numOfCells, false);
-  shipCover.appendChild(shipContainer);
+  return createShip(name, numOfCells, false);
 }
 /* ----------------------------------------------------- */
 
@@ -160,7 +159,7 @@ function drawCell(cell, direction) {
   cell.appendChild(canvas);
 }
 
-export function createGameBoard() {
+function createGameBoard() {
   // Creating the visual GameBoard
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
   const gameBoard = document.createElement("div");
@@ -200,7 +199,7 @@ export function createGameBoard() {
   return gameBoard;
 }
 
-export function createPlacingShipsRules() {
+function createPlacingShipsRules() {
   const rulesDiv = document.createElement("div");
   rulesDiv.className = "rulesDiv";
 
@@ -213,7 +212,7 @@ export function createPlacingShipsRules() {
   return rulesDiv;
 }
 
-export function createTurnBtn() {
+function createTurnBtn() {
   const btn = document.createElement("button");
   btn.className = "turn-ship";
 
@@ -230,8 +229,16 @@ export function createTurnBtn() {
 
   return btn;
 }
-export function createGameRules() {
+function createGameRules() {
   const gameRules = document.createElement("div");
   gameRules.textContent = "Game Rules";
   return gameRules;
 }
+
+export {
+  createShips,
+  createGameRules,
+  createGameBoard,
+  createPlacingShipsRules,
+  createTurnBtn,
+};

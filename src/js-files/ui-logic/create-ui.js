@@ -13,22 +13,33 @@ const cellSize = getComputedStyle(document.documentElement)
 const cellGap = getComputedStyle(document.documentElement)
   .getPropertyValue("--cell-gap")
   .trim();
-export function createShips() {
-  //  and that one is gonna create and return a whole div that have all the ships inside
-  const shipsDiv = document.createElement("div");
-  shipsDiv.id = "ships-div";
+export function createShips(user) {
+  let result;
+  if (user == "human") {
+    const shipsDiv = document.createElement("div");
+    shipsDiv.id = "ships-div";
 
-  ships.forEach((ship) => {
-    const currentShip = createShip(ship[0], ship[1]);
-    shipsDiv.appendChild(currentShip);
-  });
-  return shipsDiv;
+    ships.forEach((ship) => {
+      const currentShip = createHumanShip(ship[0], ship[1]);
+      shipsDiv.appendChild(currentShip);
+    });
+    result = shipsDiv;
+  } else if (user == "computer") {
+    const shipsObject = {};
+    ships.forEach((ship) => {
+      const currentShip = createComputerShip(ship[0], ship[1]);
+      shipsObject[ship[0]] = currentShip;
+    });
+    result = shipsObject;
+  }
+  return result;
 }
 
-function createShip(name, numOfCells) {
-  //  this function will create and return just one Ship
-  // and give it a name just on top of it
+function createComputerShip(name, numOfCells) {
+  return createShip(name, numOfCells, false);
+}
 
+function createHumanShip(name, numOfCells) {
   const shipCover = document.createElement("div");
   shipCover.className = "ship-cover";
   shipCover.id = name + "-cover-div";
@@ -46,11 +57,19 @@ function createShip(name, numOfCells) {
   nameAndBtn.appendChild(turnBtn);
 
   shipCover.appendChild(nameAndBtn);
+  const shipContainer = createShip(name, numOfCells, true);
+  shipCover.appendChild(shipContainer);
+  return shipCover;
+}
+
+function createShip(name, numOfCells, dragShip) {
+  //  this function will create and return just one Ship
+  // and give it a name just on top of it
 
   // creating the ship
   const shipContainer = document.createElement("div");
   shipContainer.className = "ship-container";
-  shipContainer.draggable = true;
+  shipContainer.draggable = dragShip;
   shipContainer.id = name;
   shipContainer.style.display = "grid";
   shipContainer.style.gridTemplateColumns =
@@ -76,9 +95,7 @@ function createShip(name, numOfCells) {
     shipContainer.appendChild(cell);
   }
 
-  shipCover.appendChild(shipContainer);
-
-  return shipCover;
+  return shipContainer;
 }
 
 // paint the cell according to it's position in the ship
