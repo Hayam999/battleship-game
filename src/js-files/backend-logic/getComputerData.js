@@ -9,7 +9,7 @@ function getComputerData() {
   const filledGameBoard = fillGb(emptyGameBoard);
   const gameBoardDiv = getComputerGameBoard(filledGameBoard);
 
-  document.body.append(gameBoardDiv);
+  return { rawData: filledGameBoard, uiData: gameBoardDiv };
 }
 
 function fillGb(gb) {

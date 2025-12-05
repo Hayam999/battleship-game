@@ -6,4 +6,5 @@ const human = await getPlayerData();
 
 const computer = getComputerData();
 
+document.body.append(human.gameBoard.uiData, computer.uiData);
 // TODO After getting computer data and computer data start play a round

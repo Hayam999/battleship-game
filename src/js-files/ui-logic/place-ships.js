@@ -28,13 +28,8 @@ function getComputerGameBoard(gb) {
 
     currentCell.append(currentUiShip);
   });
-  document.body.append(uiGb);
-  console.log("HI IM here");
-  /**
-   * 1) create uiGameBoard
-   * 2) insert each ship on the top of the cell in the appropriate index
-   * Note: you need to figure out the nameing of the gameboard so that you know what
-   */
+
+  return uiGb;
 }
 
 /**
