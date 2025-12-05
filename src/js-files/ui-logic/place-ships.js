@@ -23,8 +23,12 @@ function getComputerGameBoard(gb) {
 
   shipNames.forEach((ship) => {
     const currentShip = rawShips[ship];
+
     const currentCell = uiGb.querySelector("#cell" + currentShip.index);
     const currentUiShip = uiShips[ship];
+    if (currentShip.dir == "v") {
+      currentUiShip.style.transform = `rotate(90deg)`;
+    }
 
     currentCell.append(currentUiShip);
   });

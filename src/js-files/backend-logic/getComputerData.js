@@ -17,8 +17,8 @@ function fillGb(gb) {
   for (let i = 0; i < shipsDic.length; i++) {
     const shipName = shipsDic[i].name;
     const ship = gb.ships[shipName];
-    const decideShipDir = Math.random() * 11;
-    if (decideShipDir >= 5) {
+    const decideShipDir = Math.random() * 2;
+    if (decideShipDir >= 1) {
       ship.dir = "v";
     }
     console.log(ship.dir);
