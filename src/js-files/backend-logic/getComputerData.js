@@ -13,11 +13,16 @@ function getComputerData() {
 }
 
 function fillGb(gb) {
-  //TODO create random directions for each ship before adding them to the gameboard
   const validIndices = createArrayOfIndicies();
   for (let i = 0; i < shipsDic.length; i++) {
     const shipName = shipsDic[i].name;
     const ship = gb.ships[shipName];
+    const decideShipDir = Math.random() * 11;
+    if (decideShipDir >= 5) {
+      ship.dir = "v";
+    }
+    console.log(ship.dir);
+
     const index = pickRandomValidIndex(validIndices, ship.length, ship.dir);
     ship.updateLocation(index);
     removeForbiddenArea(validIndices, index, ship.length, ship.dir);
