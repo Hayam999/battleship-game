@@ -58,16 +58,13 @@ async function getPlayerGameBoard() {
     reviveShips(placementController.signal);
 
     const result = await new Promise((resolve) => {
-      letsPlay.addEventListener(
-        "click",
-        () => {
-          //TODO add condition for placing all ships before playing
+      letsPlay.addEventListener("click", () => {
+        if (gameBoardTable.humanPlacedAllShips()) {
           cleanupPlacementListeners();
           placeShipsDiv.remove();
           resolve({ rawData: gameBoardTable, uiData: gameBoard });
-        },
-        { once: true },
-      );
+        }
+      });
     });
     return result;
   } catch (error) {
