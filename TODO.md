@@ -1,17 +1,26 @@
----------------- Tasks from Nov 27, 2025 -----------
+---------------- Tasks from Dec 5, 2025 --------------
+TODO choose random directions for computer gameboard
+TODO filx human gameboard placement after submitting it wwith the computer gameboard
+TODO prevent let's play button from submitting and removing until all the ships have been placed in the gameboard
+
+
+
+
+
+
+---
+
+---------- Tasks from Nov 27, 2025 --------------
 
 TODO Make the ui interacts with the backend to tell them with all updates from creating ships to updating there positions after the mouseDown event that happens to them
 COMPLETE --- create data for ships and update ship index after positioning
-COMPLETE    +++ create data for gameboard to be responsible for all the updates of the ships and there positions and hits and sinks and that staff not just the ui gameboard there must be an object created from the data.js file 
+COMPLETE +++ create data for gameboard to be responsible for all the updates of the ships and there positions and hits and sinks and that staff not just the ui gameboard there must be an object created from the data.js file
 
-FIX Check Rules can't read this.matrix or self.matrix because they are nested function. 
+FIX Check Rules can't read this.matrix or self.matrix because they are nested function.
 NOTE1 => Solve this problem whether by being it not as nested or with any other way.
 NOTE2 => Rerun the program to grasp the bug more.
 
 ? where the data will be saved? on the browser or on the machine or not save it at all
-
-
-
 
 ---
 
