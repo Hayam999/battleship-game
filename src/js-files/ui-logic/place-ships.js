@@ -17,22 +17,49 @@ import {
  * @param {gb: GameBoard object filled with placed ships'}
  */
 function getComputerGameBoard(gb) {
+  const cellSize = parseFloat(
+    getComputedStyle(document.documentElement)
+      .getPropertyValue("--cell-width")
+      .trim(),
+  );
+
+  const cellGap = parseFloat(
+    getComputedStyle(document.documentElement)
+      .getPropertyValue("--cell-gap")
+      .trim(),
+  );
+
   const uiShips = createShips("computer");
   const uiGb = createGameBoard();
   const rawShips = gb.ships;
-
   shipNames.forEach((ship) => {
-    const currentShip = rawShips[ship];
-
-    const currentCell = uiGb.querySelector("#cell" + currentShip.index);
+    const currentRawShip = rawShips[ship];
     const currentUiShip = uiShips[ship];
-    if (currentShip.dir == "v") {
+
+    const rawX = currentRawShip.pos.x;
+    const rawY = currentRawShip.pos.y;
+
+    const top = rawX * cellSize + cellGap * rawX;
+    const left = rawY * cellSize + cellGap * rawY;
+
+    console.log(
+      `name: ${currentRawShip.name} \n length: ${currentRawShip.length} \n X: ${currentRawShip.pos.x} \n Y: ${currentRawShip.pos.y} \n Index: ${currentRawShip.index} \n -----------------------`,
+    );
+    uiGb.appendChild(currentUiShip);
+    uiGb.style.position = "relative";
+    currentUiShip.style.position = "absolute";
+    uiGb.style.top = "50vw";
+    uiGb.style.left = "50vw";
+    if (currentRawShip.dir == "v") {
+      currentUiShip.style.transformOrigin = "top right";
       currentUiShip.style.transform = `rotate(90deg)`;
+      currentUiShip.style.top = top + "vw";
+      currentUiShip.style.left = left - cellGap + "vw";
+    } else {
+      currentUiShip.style.top = top + "vw";
+      currentUiShip.style.left = left + "vw";
     }
-
-    currentCell.append(currentUiShip);
   });
-
   return uiGb;
 }
 
@@ -192,7 +219,7 @@ function reviveShips(signal) {
             currentShip.updateLocation(null);
             return;
           }
-
+          /// !!!
           // position the ship in the gamebord responsively
           gameBoard.appendChild(draggedShip);
           draggedShip.style.position = "absolute";
@@ -302,6 +329,30 @@ function clacPosAndIndex(gameBoard, mouseX, mouseY) {
     gameBoradIndex: index,
     xInPx: xInVw * vwUnitValueInPxls,
     yInPx: yInVh * vhUnitValueInPxls,
+  };
+}
+
+/**
+ * Calculates the pixel and percentage coordinates for a ship’s position.
+ *
+ * @param {HTMLElement} gb - The gameboard element containing the cells.
+ * @param {number} index - The index/id of the target cell.
+ * @returns {{
+ *   xInPx: number,
+ *   yInPx: number,
+ *   xInPerce: number,
+ *   yInPerce: number
+ * }} The computed position values.
+ */
+function calcComputerShipPos(gb, cellX, cellY) {
+  const gbRect = gb.getBoundingClientRect();
+  const xInPx = gbRect.x - cellX;
+  const yInPx = gbRect.y - cellY;
+  return {
+    xInPx: xInPx,
+    yInPx: yInPx,
+    xInPerce: 0,
+    yInPerce: 0,
   };
 }
 

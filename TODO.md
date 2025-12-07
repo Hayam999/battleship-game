@@ -1,12 +1,19 @@
----------------- Tasks from Dec 5, 2025 --------------
+---------------- Dec 7, 2025 --------------
+
+هل المكان اللى بتتحط فيه السفينه هو المكان اللى اختاره اللوجيك اللى كتبته وبناء عليه بيتم تحديد اماكن السفن؟
+ازاى اتغلب على مشكلة السفينه الرأسيه واشيل الفرق فى المسافة ؟
+لازم أراجع قواعد اختيار مكان السفينة.
+
+
+
+---
+
+------------- Tasks from Dec 5, 2025 --------------
 TODO choose random directions for computer gameboard
 TODO filx human gameboard placement after submitting it wwith the computer gameboard
-TODO prevent let's play button from submitting and removing until all the ships have been placed in the gameboard
 
-
-
-
-
+TODO keep styles of human ships before removing the div entirely.
+TODO style computer ships responsively
 
 ---
 
