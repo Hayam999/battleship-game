@@ -51,10 +51,10 @@ function getComputerGameBoard(gb) {
     uiGb.style.top = "50vw";
     uiGb.style.left = "50vw";
     if (currentRawShip.dir == "v") {
-      currentUiShip.style.transformOrigin = "top right";
-      currentUiShip.style.transform = `rotate(90deg)`;
       currentUiShip.style.top = top + "vw";
-      currentUiShip.style.left = left - cellGap + "vw";
+      currentUiShip.style.left = left + cellSize + "vw";
+      currentUiShip.style.transformOrigin = "top left";
+      currentUiShip.style.transform = `rotate(90deg)`;
     } else {
       currentUiShip.style.top = top + "vw";
       currentUiShip.style.left = left + "vw";
