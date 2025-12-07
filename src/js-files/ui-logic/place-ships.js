@@ -332,30 +332,6 @@ function clacPosAndIndex(gameBoard, mouseX, mouseY) {
   };
 }
 
-/**
- * Calculates the pixel and percentage coordinates for a ship’s position.
- *
- * @param {HTMLElement} gb - The gameboard element containing the cells.
- * @param {number} index - The index/id of the target cell.
- * @returns {{
- *   xInPx: number,
- *   yInPx: number,
- *   xInPerce: number,
- *   yInPerce: number
- * }} The computed position values.
- */
-function calcComputerShipPos(gb, cellX, cellY) {
-  const gbRect = gb.getBoundingClientRect();
-  const xInPx = gbRect.x - cellX;
-  const yInPx = gbRect.y - cellY;
-  return {
-    xInPx: xInPx,
-    yInPx: yInPx,
-    xInPerce: 0,
-    yInPerce: 0,
-  };
-}
-
 function hasParentWithClass(element, className) {
   let currentElement = element;
 
