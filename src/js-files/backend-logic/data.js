@@ -192,13 +192,22 @@ function GameBoard(ships) {
       if (d == "v") {
         let result = true;
         for (let i = 0; i < ship.length; i++) {
-          const cell = matrix[x + i][y - 1];
+          const cell = matrix[x - 1][y + i];
           if (!cell) {
             continue;
           }
           result = result && cell.ship === "";
         }
         return result;
+      }
+      if (d == "h") {
+        const cell = matrix[x][y - 1];
+        if (!cell) {
+          return true;
+        }
+        return cell.ship === "";
+      } else {
+        return false;
       }
     };
     const checkAllCourners = (x, y, d, matrix) => {
