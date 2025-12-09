@@ -101,7 +101,7 @@ function createShip(name, numOfCells, dragShip) {
 // paint the cell according to it's position in the ship
 function drawCell(cell, direction) {
   const canvas = document.createElement("canvas");
-  const canvaSize = parseInt(cellSize) * (window.innerWidth / 100);
+  const canvaSize = parseFloat(cellSize) * (window.innerWidth / 100);
 
   canvas.width = canvaSize;
   canvas.height = canvaSize;
