@@ -8,6 +8,17 @@ import {
   shipNames,
 } from "../backend-logic/data.js";
 
+const cellSize = parseFloat(
+  getComputedStyle(document.documentElement)
+    .getPropertyValue("--cell-width")
+    .trim(),
+);
+
+const cellGap = parseFloat(
+  getComputedStyle(document.documentElement)
+    .getPropertyValue("--cell-gap")
+    .trim(),
+);
 /**
  * -------------------- Computer GameBoard --------------------
  */
@@ -17,48 +28,13 @@ import {
  * @param {gb: GameBoard object filled with placed ships'}
  */
 function getComputerGameBoard(gb) {
-  const cellSize = parseFloat(
-    getComputedStyle(document.documentElement)
-      .getPropertyValue("--cell-width")
-      .trim(),
-  );
-
-  const cellGap = parseFloat(
-    getComputedStyle(document.documentElement)
-      .getPropertyValue("--cell-gap")
-      .trim(),
-  );
-
   const uiShips = createShips("computer");
   const uiGb = createGameBoard();
   const rawShips = gb.ships;
   shipNames.forEach((ship) => {
     const currentRawShip = rawShips[ship];
     const currentUiShip = uiShips[ship];
-
-    const rawX = currentRawShip.pos.x;
-    const rawY = currentRawShip.pos.y;
-
-    const top = rawX * cellSize + cellGap * rawX;
-    const left = rawY * cellSize + cellGap * rawY;
-
-    console.log(
-      `name: ${currentRawShip.name} \n length: ${currentRawShip.length} \n X: ${currentRawShip.pos.x} \n Y: ${currentRawShip.pos.y} \n Index: ${currentRawShip.index} \n -----------------------`,
-    );
-    uiGb.appendChild(currentUiShip);
-    uiGb.style.position = "relative";
-    currentUiShip.style.position = "absolute";
-    uiGb.style.top = "50vw";
-    uiGb.style.left = "50vw";
-    if (currentRawShip.dir == "v") {
-      currentUiShip.style.top = top + "vw";
-      currentUiShip.style.left = left + cellSize + "vw";
-      currentUiShip.style.transformOrigin = "top left";
-      currentUiShip.style.transform = `rotate(90deg)`;
-    } else {
-      currentUiShip.style.top = top + "vw";
-      currentUiShip.style.left = left + "vw";
-    }
+    positionUiShip(currentRawShip, currentUiShip, uiGb);
   });
   return uiGb;
 }
@@ -365,7 +341,30 @@ function calcNewPos(oldX, oldY, ship, gameboard) {
   return { x: newX, y: newY };
 }
 
-//////////////////////////////
+/******************************************************************/
+
+function positionUiShip(currentRawShip, currentUiShip, uiGb) {
+  const rawX = currentRawShip.pos.x;
+  const rawY = currentRawShip.pos.y;
+
+  const top = rawX * cellSize + cellGap * rawX;
+  const left = rawY * cellSize + cellGap * rawY;
+
+  uiGb.appendChild(currentUiShip);
+  uiGb.style.position = "relative";
+  currentUiShip.style.position = "absolute";
+  if (currentRawShip.dir == "v") {
+    currentUiShip.style.top = top + "vw";
+    currentUiShip.style.left = left + cellSize + "vw";
+    currentUiShip.style.transformOrigin = "top left";
+    currentUiShip.style.transform = `rotate(90deg)`;
+  } else {
+    currentUiShip.style.top = top + "vw";
+    currentUiShip.style.left = left + "vw";
+  }
+}
+
+/******************************************************************/
 
 function cleanupPlacementListeners() {
   if (placementController) {
