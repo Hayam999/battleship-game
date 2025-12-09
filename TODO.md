@@ -1,29 +1,29 @@
 ---------------- Dec 7, 2025 --------------
+TODO review and fix rules for removing the forbidden area: because the ships don't keep the gaps between them correctly.
 
-هل المكان اللى بتتحط فيه السفينه هو المكان اللى اختاره اللوجيك اللى كتبته وبناء عليه بيتم تحديد اماكن السفن؟
-ازاى اتغلب على مشكلة السفينه الرأسيه واشيل الفرق فى المسافة ؟
+
+هل المكان اللى بتتحط فيه السفينه هو المكان اللى اختاره اللوجيك اللى كتبته وبناء عليه بيتم تحديد اماكن السفن؟" أيوه"
+ازاى اتغلب على مشكلة السفينه الرأسيه واشيل الفرق فى المسافة ؟"إتغلبت وظبطتها مش عارفة جت ازاى بس جت" وخلاص
 لازم أراجع قواعد اختيار مكان السفينة.
-
-
 
 ---
 
 ------------- Tasks from Dec 5, 2025 --------------
-TODO choose random directions for computer gameboard
+COMPLETE choose random directions for computer gameboard
 TODO filx human gameboard placement after submitting it wwith the computer gameboard
 
 TODO keep styles of human ships before removing the div entirely.
-TODO style computer ships responsively
+COMPLETE style computer ships responsively
 
 ---
 
 ---------- Tasks from Nov 27, 2025 --------------
 
-TODO Make the ui interacts with the backend to tell them with all updates from creating ships to updating there positions after the mouseDown event that happens to them
+COMPLETE Make the ui interacts with the backend to tell them with all updates from creating ships to updating there positions after the mouseDown event that happens to them
 COMPLETE --- create data for ships and update ship index after positioning
 COMPLETE +++ create data for gameboard to be responsible for all the updates of the ships and there positions and hits and sinks and that staff not just the ui gameboard there must be an object created from the data.js file
 
-FIX Check Rules can't read this.matrix or self.matrix because they are nested function.
+COMPLETE Check Rules can't read this.matrix or self.matrix because they are nested function.
 NOTE1 => Solve this problem whether by being it not as nested or with any other way.
 NOTE2 => Rerun the program to grasp the bug more.
 

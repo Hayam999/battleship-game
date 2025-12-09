@@ -13,19 +13,24 @@ function getComputerData() {
 }
 
 function fillGb(gb) {
-  const validIndices = createArrayOfIndicies();
+  let validIndices = createArrayOfIndicies();
   for (let i = 0; i < shipsDic.length; i++) {
+    console.log(`This is the new version of 
+      ValidIndicies: ${validIndices} \n --------- \n it's length is: ${validIndices.length}`);
     const shipName = shipsDic[i].name;
     const ship = gb.ships[shipName];
     const decideShipDir = Math.random() * 2;
     if (decideShipDir >= 1) {
       ship.dir = "v";
     }
-    console.log(ship.dir);
-
     const index = pickRandomValidIndex(validIndices, ship.length, ship.dir);
     ship.updateLocation(index);
-    removeForbiddenArea(validIndices, index, ship.length, ship.dir);
+    validIndices = removeForbiddenArea(
+      validIndices,
+      index,
+      ship.length,
+      ship.dir,
+    );
     gb.addComputerShip(ship);
   }
   return gb;
@@ -92,7 +97,7 @@ function pickRandomValidIndex(validIndices, shipLength, shipDirection) {
             shipLength: the length of the ship for it we remove forbiddenArea from validIndices.
             shipDirection: direction of the same Ship.
     @purpose: remove the occupied area by the ship and around it from validIndices so that future ships won't have the option to occupy it.
-    @Side Effects: change given validIndices by removing some values.
+    @return: updated version of validIndicesArray
  **/
 function removeForbiddenArea(
   validIndices,
@@ -100,6 +105,7 @@ function removeForbiddenArea(
   shipLength,
   shipDirection,
 ) {
+  let newArray;
   const addForbiddenAreaAroundVerticalShip = (forbiddenValues, shipArray) => {
     const oneCellUp = shipArray[0] - 11;
     const oneCellDown = shipArray[shipLength - 1] + 11;
@@ -109,6 +115,7 @@ function removeForbiddenArea(
       const oneCellLeft = shipArray[i] - 1;
       forbiddenValues.push(oneCellRight, oneCellLeft);
     }
+    return forbiddenValues;
   };
 
   const addForbiddenAreaAroundHorizontalShip = (forbiddenValues, shipArray) => {
@@ -124,15 +131,17 @@ function removeForbiddenArea(
       firstCellUp++;
       firstCellDown++;
     }
+    return forbiddenValues;
   };
 
   const removeIndicies = (forbiddenValues) => {
-    for (let i = 0; i < forbiddenValues; i++) {
+    for (let i = 0; i < forbiddenValues.length; i++) {
       const toRemove = validIndices.indexOf(forbiddenValues[i]);
       if (toRemove) {
         validIndices.splice(toRemove, 1);
       }
     }
+    newArray = validIndices;
   };
 
   if (shipDirection == "v") {
@@ -141,20 +150,27 @@ function removeForbiddenArea(
       const newIndex = shipIndex + 11 * i;
       shipArray.push(newIndex);
     }
-    const forbiddenValues = shipArray;
-    addForbiddenAreaAroundVerticalShip(forbiddenValues, shipArray);
+    let forbiddenValues = shipArray;
+    forbiddenValues = addForbiddenAreaAroundVerticalShip(
+      forbiddenValues,
+      shipArray,
+    );
     removeIndicies(forbiddenValues);
   } else if (shipDirection == "h") {
     const shipArray = [];
     for (let i = 0; i < shipLength; i++) {
       shipArray.push(shipIndex + i);
     }
-    const forbiddenValues = shipArray;
-    addForbiddenAreaAroundHorizontalShip(forbiddenValues, shipArray);
+    let forbiddenValues = shipArray;
+    forbiddenValues = addForbiddenAreaAroundHorizontalShip(
+      forbiddenValues,
+      shipArray,
+    );
     removeIndicies(forbiddenValues);
   } else {
     throw new Error("Invalid ship direction");
   }
+  return newArray;
 }
 
 export { getComputerData };
