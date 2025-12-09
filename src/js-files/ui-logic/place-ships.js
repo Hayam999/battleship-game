@@ -68,8 +68,16 @@ async function getPlayerGameBoard() {
       letsPlay.addEventListener("click", () => {
         if (gameBoardTable.humanPlacedAllShips()) {
           cleanupPlacementListeners();
+          const uiShips = createShips("computer");
+          const uiGb = createGameBoard();
+          const rawShips = gameBoardTable.ships;
+          shipNames.forEach((ship) => {
+            const currentRawShip = rawShips[ship];
+            const currentUiShip = uiShips[ship];
+            positionUiShip(currentRawShip, currentUiShip, uiGb);
+          });
           placeShipsDiv.remove();
-          resolve({ rawData: gameBoardTable, uiData: gameBoard });
+          resolve({ rawData: gameBoardTable, uiData: uiGb });
         }
       });
     });
