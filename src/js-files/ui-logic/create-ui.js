@@ -233,3 +233,30 @@ export function createGameRules() {
   gameRules.textContent = "Game Rules";
   return gameRules;
 }
+
+/**
+ * @purpose Crafts visual playground
+ * @param {computerGb: visual gameBoard for computer}
+ * @param {humanGb: visual gameboard for computer}
+ * @returns HtmlDivElement holding gameboards
+ */
+export function createUiPlayground(humanGb, computerGb) {
+  const ocean = document.createElement("div");
+  ocean.id = "ocean";
+  const header = document.createElement("h1");
+  header.id = "battlespace-header";
+  header.innerText = "Battleship";
+
+  const friendlyWaters = document.createElement("div");
+  friendlyWaters.id = "friendly-waters";
+  const enemyWaters = document.createElement("div");
+  enemyWaters.id = "enemy-waters";
+  friendlyWaters.appendChild(humanGb);
+  enemyWaters.appendChild(computerGb);
+
+  const battlespace = document.createElement("div");
+  battlespace.append(enemyWaters, friendlyWaters);
+
+  ocean.append(battlespace, header);
+  return ocean;
+}

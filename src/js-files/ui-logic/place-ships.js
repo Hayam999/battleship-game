@@ -27,14 +27,14 @@ const cellGap = parseFloat(
  *
  * @param {gb: GameBoard object filled with placed ships'}
  */
-function getComputerGameBoard(gb) {
+function getComputerGameBoard() {
   const uiShips = createShips("computer");
   const uiGb = createGameBoard();
-  const rawShips = gb.ships;
   shipNames.forEach((ship) => {
-    const currentRawShip = rawShips[ship];
     const currentUiShip = uiShips[ship];
-    positionUiShip(currentRawShip, currentUiShip, uiGb);
+    uiGb.appendChild(currentUiShip);
+    currentUiShip.style.position = "absolute";
+    currentUiShip.style.display = "none";
   });
   return uiGb;
 }
