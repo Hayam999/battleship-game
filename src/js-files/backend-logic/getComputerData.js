@@ -4,7 +4,6 @@ import {
   createArrayOfIndicies,
 } from "./data.js";
 import { getComputerGameBoard } from "../ui-logic/place-ships.js";
-
 /**
  *
  * @returns { rawData: backEnd gameboard, uiData: visual gameboard }

@@ -291,6 +291,17 @@ function GameBoard(ships) {
   return {
     matrix: matrix,
     ships: ships,
+    shoot(index) {
+      const x = Math.floor(index / 11);
+      const y = index - x * 11;
+      const ship = this.matrix[x][y];
+      if (ship === "") {
+        return false;
+      }
+      this.ships[ship].hit();
+      this.matrix[x][y] = "";
+      return true;
+    },
     addShip(ship) {
       const validLocation = checkRules(ship, this.matrix);
       if (!validLocation) {
