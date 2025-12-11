@@ -5,6 +5,10 @@ import {
 } from "./data.js";
 import { getComputerGameBoard } from "../ui-logic/place-ships.js";
 
+/**
+ *
+ * @returns { rawData: backEnd gameboard, uiData: visual gameboard }
+ */
 function getComputerData() {
   const emptyGameBoard = CreateRawGameBoard();
   const filledGameBoard = fillGb(emptyGameBoard);
