@@ -11,7 +11,9 @@ import { createArrayOfIndicies } from "./backend-logic/data.js";
 function play(human, computer) {
   const ocean = createUiPlayground(human.gameBoard.uiData, computer.uiData);
   document.body.appendChild(ocean);
-
+  const winnerHits = 17;
+  let humanHits = 0;
+  let computerHits = 0;
   const InitguessArray = createArrayOfIndicies();
   let guessArray = [...InitguessArray];
   const computerWaters = computer.uiData;
@@ -25,28 +27,23 @@ function play(human, computer) {
       humanTurn = false;
       const id = e.target.id;
       const index = parseInt(id.substring(4));
-      const hit = shootComputerWaters(index);
+      const hit = computerWaterBase.shoot(index);
+      console.log(computerWaterBase.matrix);
       //TODO add shooting audio and setTimeOut until audio finishes
       setTimeout(() => {
         if (!hit) {
           computerTurn();
         } else {
-          humanTurn = true;
+          humanHits++;
+          if (humanHits == winnerHits) {
+            declareWinner("human");
+          } else {
+            humanTurn = true;
+          }
         }
       }, 2000);
     }
   });
-
-  /**
-   *
-   * @param {index} the index of the shooted cell;
-   * @returns Boolean: ture if human hit a computer ship, false if missed the hit
-   */
-
-  function shootComputerWaters(index) {
-    const hitShip = computerWaterBase.shoot(index);
-    return hitShip;
-  }
 
   /**
    *
@@ -55,18 +52,24 @@ function play(human, computer) {
   function computerTurn() {
     const index = guess();
     const hitShip = humanWaterBase.shoot(index);
+    console.log(humanWaterBase.matrix);
     setTimeout(() => {
       if (hitShip) {
-        computerTurn();
+        computerHits++;
+        if (computerHits == winnerHits) {
+          declareWinner(computer);
+        } else {
+          computerTurn();
+        }
       } else {
         humanTurn = true;
         return;
       }
-    });
-    // guess an index;
-    // shoot human waters;
-    // if shoot on ship take another turen
-    // else set humanTurn to true;
+    }, 2000);
+  }
+
+  function declareWinner(winner) {
+    return winner;
   }
 
   function guess() {
