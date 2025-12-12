@@ -260,3 +260,27 @@ export function createUiPlayground(humanGb, computerGb) {
   ocean.append(battlespace, header);
   return ocean;
 }
+
+export function addCircle(uiGb, cellId, color) {
+  console.log(cellId);
+  const cell = uiGb.querySelector("#" + cellId);
+  const canvas = document.createElement("canvas");
+
+  const canvaSize = parseFloat(cellSize) * (window.innerWidth / 100);
+  const ctx = canvas.getContext("2d");
+  canvas.width = canvaSize;
+  canvas.height = canvaSize;
+
+  const centerX = canvaSize / 2;
+  const centerY = canvaSize / 2;
+  const radius = canvaSize / 4;
+
+  ctx.fillStyle = color;
+  ctx.beginPath(); // Good practice to add this
+  ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  cell.appendChild(canvas);
+  canvas.style.zIndex = 3;
+  canvas.style.display = "inline";
+}

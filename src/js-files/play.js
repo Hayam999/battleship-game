@@ -1,4 +1,4 @@
-import { createUiPlayground } from "./ui-logic/create-ui.js";
+import { createUiPlayground, addCircle } from "./ui-logic/create-ui.js";
 import { createArrayOfIndicies } from "./backend-logic/data.js";
 
 /**
@@ -20,6 +20,8 @@ function play(human, computer) {
   const computerWaterBase = computer.rawData;
   const humanWaters = human.gameBoard.uiData;
   const humanWaterBase = human.gameBoard.rawData;
+  addCircle(computerWaters, "cell54", "red");
+  addCircle(computerWaters, "cell89", "#6fc4ebff");
 
   let humanTurn = true;
   computerWaters.addEventListener("click", (e) => {
@@ -34,6 +36,7 @@ function play(human, computer) {
           computerTurn();
         } else {
           humanHits++;
+          addCircle(computerWaters, "cell" + index, "red");
           if (humanHits == winnerHits) {
             declareWinner("human");
           } else {
@@ -54,6 +57,7 @@ function play(human, computer) {
     const hitShip = humanWaterBase.shoot(index);
     setTimeout(() => {
       if (hitShip) {
+        addCircle(humanWaters, "cell" + index, "red");
         computerHits++;
         if (computerHits == winnerHits) {
           declareWinner(computer);

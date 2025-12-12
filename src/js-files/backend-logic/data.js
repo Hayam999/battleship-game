@@ -296,7 +296,6 @@ function GameBoard(ships) {
       const y = index - x * 11;
       const cell = this.matrix[x][y];
       const ship = cell.ship;
-      console.log();
       if (ship === "") {
         return false;
       }
