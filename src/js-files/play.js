@@ -33,6 +33,7 @@ function play(human, computer) {
       //TODO add shooting audio and setTimeOut until audio finishes
       setTimeout(() => {
         if (!shot.hit) {
+          addCircle(computerWaters, "cell" + index, "#56a5eeff");
           computerTurn();
         } else {
           humanHits++;
@@ -56,7 +57,6 @@ function play(human, computer) {
    */
   function computerTurn() {
     const index = guess();
-    console.log(guessArray);
     const shot = humanWaterBase.shoot(index);
     setTimeout(() => {
       if (shot.hit) {
@@ -68,6 +68,7 @@ function play(human, computer) {
           computerTurn();
         }
       } else {
+        addCircle(humanWaters, "cell" + index, "#56a5eeff");
         humanTurn = true;
         return;
       }
@@ -89,8 +90,6 @@ function play(human, computer) {
    */
   function revealShip(ship) {
     const uiShip = computerWaters.querySelector("#" + ship);
-    const rawShip = computerWaterBase.ships[ship];
-    addCircle(computerWaters, "cell" + rawShip.index, "red");
     uiShip.style.visibility = "visible";
   }
 }
