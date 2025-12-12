@@ -28,7 +28,6 @@ function play(human, computer) {
       const id = e.target.id;
       const index = parseInt(id.substring(4));
       const hit = computerWaterBase.shoot(index);
-      console.log(computerWaterBase.matrix);
       //TODO add shooting audio and setTimeOut until audio finishes
       setTimeout(() => {
         if (!hit) {
@@ -51,8 +50,8 @@ function play(human, computer) {
    */
   function computerTurn() {
     const index = guess();
+    console.log(guessArray);
     const hitShip = humanWaterBase.shoot(index);
-    console.log(humanWaterBase.matrix);
     setTimeout(() => {
       if (hitShip) {
         computerHits++;

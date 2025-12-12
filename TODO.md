@@ -1,6 +1,17 @@
----------------- Dec 7, 2025 --------------
-TODO review and fix rules for removing the forbidden area: because the ships don't keep the gaps between them correctly.
+---------------- Dec 12, 2025 --------------
+TODO define putRedCircle()
+TODO define showShip()
 
+
+
+
+
+
+
+---
+
+------------- Dec 7, 2025 --------------
+COMPLETE review and fix rules for removing the forbidden area: because the ships don't keep the gaps between them correctly.
 
 هل المكان اللى بتتحط فيه السفينه هو المكان اللى اختاره اللوجيك اللى كتبته وبناء عليه بيتم تحديد اماكن السفن؟" أيوه"
 ازاى اتغلب على مشكلة السفينه الرأسيه واشيل الفرق فى المسافة ؟"إتغلبت وظبطتها مش عارفة جت ازاى بس جت" وخلاص

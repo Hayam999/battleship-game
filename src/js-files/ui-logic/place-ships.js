@@ -27,13 +27,14 @@ const cellGap = parseFloat(
  *
  * @param {gb: GameBoard object filled with placed ships'}
  */
-function getComputerGameBoard() {
+function getComputerGameBoard(gb) {
   const uiShips = createShips("computer");
   const uiGb = createGameBoard();
+  uiGb.style.position = "relative";
   shipNames.forEach((ship) => {
+    const currentRawShip = gb.ships[ship];
     const currentUiShip = uiShips[ship];
-    uiGb.appendChild(currentUiShip);
-    currentUiShip.style.position = "absolute";
+    positionUiShip(currentRawShip, currentUiShip, uiGb);
     currentUiShip.style.display = "none";
   });
   return uiGb;
@@ -70,6 +71,7 @@ async function getPlayerGameBoard() {
           cleanupPlacementListeners();
           const uiShips = createShips("computer");
           const uiGb = createGameBoard();
+          uiGb.style.position = "relative";
           const rawShips = gameBoardTable.ships;
           shipNames.forEach((ship) => {
             const currentRawShip = rawShips[ship];
@@ -359,7 +361,6 @@ function positionUiShip(currentRawShip, currentUiShip, uiGb) {
   const left = rawY * cellSize + cellGap * rawY;
 
   uiGb.appendChild(currentUiShip);
-  uiGb.style.position = "relative";
   currentUiShip.style.position = "absolute";
   if (currentRawShip.dir == "v") {
     currentUiShip.style.top = top + "vw";

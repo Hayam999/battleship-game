@@ -11,7 +11,7 @@ import { getComputerGameBoard } from "../ui-logic/place-ships.js";
 function getComputerData() {
   const emptyGameBoard = CreateRawGameBoard();
   const filledGameBoard = fillGb(emptyGameBoard);
-  const gameBoardDiv = getComputerGameBoard();
+  const gameBoardDiv = getComputerGameBoard(filledGameBoard);
 
   return { rawData: filledGameBoard, uiData: gameBoardDiv };
 }
