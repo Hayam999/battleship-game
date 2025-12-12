@@ -20,6 +20,7 @@ function play(human, computer) {
   const computerWaterBase = computer.rawData;
   const humanWaters = human.gameBoard.uiData;
   const humanWaterBase = human.gameBoard.rawData;
+  revealShip("submarine");
 
   let humanTurn = true;
   computerWaters.addEventListener("click", (e) => {
@@ -35,6 +36,9 @@ function play(human, computer) {
         } else {
           humanHits++;
           addCircle(computerWaters, "cell" + index, "red");
+          if (shot.isSunk) {
+            revealShip(shot.ship);
+          }
           if (humanHits == winnerHits) {
             declareWinner("human");
           } else {
@@ -78,6 +82,15 @@ function play(human, computer) {
     const index = guessArray[randomNum];
     guessArray.splice(randomNum, 1);
     return index;
+  }
+  /*
+  @purpose: reveals the given ship in the computer gameboard
+   */
+  function revealShip(ship) {
+    const uiShip = computerWaters.querySelector("#" + ship);
+    const rawShip = computerWaterBase.ships[ship];
+    addCircle(computerWaters, "cell" + rawShip.index, "red");
+    uiShip.style.display = "inline";
   }
 }
 
