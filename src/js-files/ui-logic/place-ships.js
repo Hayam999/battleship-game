@@ -35,7 +35,7 @@ function getComputerGameBoard(gb) {
     const currentRawShip = gb.ships[ship];
     const currentUiShip = uiShips[ship];
     positionUiShip(currentRawShip, currentUiShip, uiGb);
-    currentUiShip.style.display = "none";
+    currentUiShip.style.visibility = "hidden";
   });
   return uiGb;
 }

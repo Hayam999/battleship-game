@@ -90,7 +90,7 @@ function play(human, computer) {
     const uiShip = computerWaters.querySelector("#" + ship);
     const rawShip = computerWaterBase.ships[ship];
     addCircle(computerWaters, "cell" + rawShip.index, "red");
-    uiShip.style.display = "inline";
+    uiShip.style.visibility = "visible";
   }
 }
 
