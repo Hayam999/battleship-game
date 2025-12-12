@@ -297,11 +297,12 @@ function GameBoard(ships) {
       const cell = this.matrix[x][y];
       const ship = cell.ship;
       if (ship === "") {
-        return false;
+        return { hit: false, ship: "", shipSunk: false };
       }
-      this.ships[ship].hit();
+      const currentShip = this.ships[ship];
+      currentShip.hit();
       this.matrix[x][y] = "";
-      return true;
+      return { hit: true, ship: ship, isSunk: currentShip.isSunk() };
     },
     addShip(ship) {
       const validLocation = checkRules(ship, this.matrix);

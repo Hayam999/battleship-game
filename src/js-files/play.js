@@ -20,8 +20,6 @@ function play(human, computer) {
   const computerWaterBase = computer.rawData;
   const humanWaters = human.gameBoard.uiData;
   const humanWaterBase = human.gameBoard.rawData;
-  addCircle(computerWaters, "cell54", "red");
-  addCircle(computerWaters, "cell89", "#6fc4ebff");
 
   let humanTurn = true;
   computerWaters.addEventListener("click", (e) => {
@@ -29,10 +27,10 @@ function play(human, computer) {
       humanTurn = false;
       const id = e.target.id;
       const index = parseInt(id.substring(4));
-      const hit = computerWaterBase.shoot(index);
+      const shot = computerWaterBase.shoot(index);
       //TODO add shooting audio and setTimeOut until audio finishes
       setTimeout(() => {
-        if (!hit) {
+        if (!shot.hit) {
           computerTurn();
         } else {
           humanHits++;
@@ -54,9 +52,9 @@ function play(human, computer) {
   function computerTurn() {
     const index = guess();
     console.log(guessArray);
-    const hitShip = humanWaterBase.shoot(index);
+    const shot = humanWaterBase.shoot(index);
     setTimeout(() => {
-      if (hitShip) {
+      if (shot.hit) {
         addCircle(humanWaters, "cell" + index, "red");
         computerHits++;
         if (computerHits == winnerHits) {
