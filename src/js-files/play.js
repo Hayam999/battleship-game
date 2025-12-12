@@ -20,6 +20,7 @@ function play(human, computer) {
   const computerWaterBase = computer.rawData;
   const humanWaters = human.gameBoard.uiData;
   const humanWaterBase = human.gameBoard.rawData;
+  addCircle(humanWaters, "cell94", "red");
   revealShip("submarine");
 
   let humanTurn = true;

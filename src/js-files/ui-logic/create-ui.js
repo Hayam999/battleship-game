@@ -281,6 +281,6 @@ export function addCircle(uiGb, cellId, color) {
   ctx.fill();
 
   cell.appendChild(canvas);
+  canvas.style.position = "relative";
   canvas.style.zIndex = 3;
-  canvas.style.display = "inline";
 }
