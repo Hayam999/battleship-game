@@ -73,7 +73,7 @@ function play(human, computer) {
             humanTurn = true;
           }
         }
-      }, 2000);
+      }, 1000);
     }
   });
 
@@ -93,7 +93,6 @@ function play(human, computer) {
     }
     setTimeout(() => {
       if (shot.hit) {
-        addCircle(humanWaters, "cell" + index, "red");
         computerHits++;
         if (computerHits == winnerHits) {
           declareWinner(computer);
@@ -104,7 +103,7 @@ function play(human, computer) {
         humanTurn = true;
         return;
       }
-    }, 2000);
+    }, 1000);
   }
 
   function declareWinner(winner) {

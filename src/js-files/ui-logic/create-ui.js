@@ -172,14 +172,8 @@ export function createGameBoard() {
       cell.id = "cell" + index;
       // check if it's an appropriate cell to label with a letter
       if (j === 0) {
-        if (i != 0) {
-          cell.innerText = letters[i - 1];
-        }
         cell.classList.add("numeric-cell");
       } else if (i === 0) {
-        if (j != 0) {
-          cell.innerText = j;
-        }
         cell.classList.add("numeric-cell");
       } else if (j === 10 && i != 0) {
         cell.classList.add("back");
@@ -255,9 +249,10 @@ export function createUiPlayground(humanGb, computerGb) {
   enemyWaters.appendChild(computerGb);
 
   const battlespace = document.createElement("div");
+  battlespace.id = "battlespace";
   battlespace.append(enemyWaters, friendlyWaters);
 
-  ocean.append(battlespace, header);
+  ocean.append(header, battlespace);
   return ocean;
 }
 

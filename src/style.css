@@ -360,3 +360,15 @@ button#cancel-name:hover {
 #ships-div {
   position: relative;
 }
+
+#ocean {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: space-between;
+}
+#battlespace {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
