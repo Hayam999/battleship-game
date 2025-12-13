@@ -37,8 +37,8 @@ function play(human, computer) {
     "ended",
     () => {
       if (oceanSoundOn) {
-        this.currentTime = 0;
-        this.play();
+        oceanSound.currentTime = 0;
+        oceanSound.play();
       }
     },
     false,
@@ -47,8 +47,8 @@ function play(human, computer) {
     "ended",
     () => {
       if (oceanSoundOn) {
-        this.currentTime = 0;
-        this.play();
+        radioSound.currentTime = 0;
+        radioSound.play();
       }
     },
     false,
