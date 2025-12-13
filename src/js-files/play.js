@@ -1,8 +1,15 @@
-import { createUiPlayground, addCircle } from "./ui-logic/create-ui.js";
+import {
+  createUiPlayground,
+  addCircle,
+  createFinal,
+} from "./ui-logic/create-ui.js";
 import { createArrayOfIndicies } from "./backend-logic/data.js";
 import shootMp3 from "../assets/shoot.mp3";
 import boomMp3 from "../assets/boom.mp3";
 import oceanMp3 from "../assets/ocean.mp3";
+import humanLoseMp3 from "../assets/humanLose.mp3";
+import humanWinMp3 from "../assets/humanWin.mp3";
+import radioMp3 from "../assets/radio.mp3";
 
 /**
  * @purpose Starts playing a complete round
@@ -13,8 +20,14 @@ import oceanMp3 from "../assets/ocean.mp3";
 
 function play(human, computer) {
   const oceanSound = new Audio(oceanMp3);
+  const shotSound = new Audio(shootMp3);
+  const boomSound = new Audio(boomMp3);
+  const humanLoseSound = new Audio(humanLoseMp3);
+  const humanWinSound = new Audio(humanWinMp3);
+  const radioSound = new Audio(radioMp3);
   let oceanSoundOn = true;
   oceanSound.play();
+  radioSound.play();
   oceanSound.addEventListener("error", (e) => {
     console.error("Audio load error:", e);
     console.error("Error code:", oceanSound.error?.code);
@@ -30,10 +43,20 @@ function play(human, computer) {
     },
     false,
   );
-  const shotSound = new Audio(shootMp3);
-  const boomSound = new Audio(boomMp3);
-  const ocean = createUiPlayground(human.gameBoard.uiData, computer.uiData);
+  radioSound.addEventListener(
+    "ended",
+    () => {
+      if (oceanSoundOn) {
+        this.currentTime = 0;
+        this.play();
+      }
+    },
+    false,
+  );
 
+  /*********/
+
+  const ocean = createUiPlayground(human.gameBoard.uiData, computer.uiData);
   document.body.appendChild(ocean);
   const winnerHits = 17;
   let humanHits = 0;
@@ -107,7 +130,16 @@ function play(human, computer) {
   }
 
   function declareWinner(winner) {
-    return winner;
+    ocean.remove();
+    const finalScene = createFinal(winner);
+    document.body.append(finalScene);
+    if (winner == "human") {
+      humanWinSound.play();
+    } else if (winner == "computer") {
+      humanLoseSound.play();
+    } else {
+      throw new Error("invalid winner");
+    }
   }
 
   function guess() {

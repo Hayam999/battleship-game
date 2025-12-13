@@ -1,3 +1,4 @@
+import humanLoseImg from "../../assets/wreck.svg";
 const ships = [
   ["carrier", 5],
   ["battleShip", 4],
@@ -158,8 +159,6 @@ function drawCell(cell, direction) {
 }
 
 export function createGameBoard() {
-  // Creating the visual GameBoard
-  const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
   const gameBoard = document.createElement("div");
 
   gameBoard.className = "gameBoard";
@@ -278,4 +277,18 @@ export function addCircle(uiGb, cellId, color) {
   cell.appendChild(canvas);
   canvas.style.position = "relative";
   canvas.style.zIndex = 3;
+}
+
+export function createFinal(winner) {
+  const parent = document.createElement("div");
+  const imgDiv = document.createElement("div");
+  //TODO in this imgDiv i need to add the image according who wins
+  const playAgain = document.createElement("button");
+  playAgain.id = "play-again";
+  playAgain.innerText = "Play Again";
+  playAgain.addEventListener("click", () => {
+    //TODO here we need to start from let human place there ships. and then create new computer ships and then start playing.
+  });
+  parent.append(imgDiv, playAgain);
+  return parent;
 }
