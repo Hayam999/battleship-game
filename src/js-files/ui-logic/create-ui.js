@@ -1,4 +1,5 @@
-import humanLoseImg from "../../assets/wreck.svg";
+import humanLoseImg from "../../assets/humanLose.svg";
+import humanWinImg from "../../assets/humanWin.svg";
 const ships = [
   ["carrier", 5],
   ["battleShip", 4],

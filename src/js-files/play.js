@@ -69,34 +69,37 @@ function play(human, computer) {
   const humanWaterBase = human.gameBoard.rawData;
   let humanTurn = true;
   computerWaters.addEventListener("click", (e) => {
-    if (humanTurn) {
-      shotSound.currentTime = 0;
-      shotSound.play();
-      humanTurn = false;
-      const id = e.target.id;
-      const index = parseInt(id.substring(4));
-      const shot = computerWaterBase.shoot(index);
-      if (shot.hit) {
-        addCircle(computerWaters, "cell" + index, "red");
-      } else {
-        addCircle(computerWaters, "cell" + index, "#56a5eeff");
-      }
-      //TODO add shooting audio and setTimeOut until audio finishes
-      setTimeout(() => {
-        if (!shot.hit) {
-          computerTurn();
+    const id = e.target.id;
+    if (id.startsWith("cell")) {
+      if (humanTurn) {
+        shotSound.currentTime = 0;
+        shotSound.play();
+        humanTurn = false;
+
+        const index = parseInt(id.substring(4));
+        const shot = computerWaterBase.shoot(index);
+        if (shot.hit) {
+          addCircle(computerWaters, "cell" + index, "red");
         } else {
-          humanHits++;
-          if (shot.isSunk) {
-            revealShip(shot.ship);
-          }
-          if (humanHits == winnerHits) {
-            declareWinner("human");
-          } else {
-            humanTurn = true;
-          }
+          addCircle(computerWaters, "cell" + index, "#56a5eeff");
         }
-      }, 1000);
+        //TODO add shooting audio and setTimeOut until audio finishes
+        setTimeout(() => {
+          if (!shot.hit) {
+            computerTurn();
+          } else {
+            humanHits++;
+            if (shot.isSunk) {
+              revealShip(shot.ship);
+            }
+            if (humanHits == winnerHits) {
+              declareWinner("human");
+            } else {
+              humanTurn = true;
+            }
+          }
+        }, 1000);
+      }
     }
   });
 

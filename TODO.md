@@ -1,7 +1,7 @@
 ---------------- Dec 13, 2025 --------------
 
 TODO limit evenListener to only responds if we clicked a not shooted cell before
-
+FIX problem when setting radio sound to currentTime = 0;
 
 ---
 
