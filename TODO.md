@@ -1,17 +1,29 @@
----------------- Dec 12, 2025 --------------
-TODO define putRedCircle()
-TODO define showShip()
+---------------- Dec 13, 2025 --------------
 
-
-
-
-
-
+TODO limit evenListener to only responds if we clicked a not shooted cell before
 
 ---
 
-------------- Dec 7, 2025 --------------
-COMPLETE review and fix rules for removing the forbidden area: because the ships don't keep the gaps between them correctly.
+---------- Dec 12, 2025 --------------
+COMPLETE define addCircle()
+COMPLETE define revealShip()
+
+TODO add sound effects
+TODO make computer make smarter decisions:
+
+---
+
+-      Hold the last index that caused hit shot.
+       Try all the directions one at a time.
+       Store the trial to visit if we lose a shot.
+       Decide the direction of the ship when reaching the first right possiblity.
+       Go on successful shooting until you miss the shot.
+       Make a completely random guess when we reach several hit shots followed by one miss
+
+  ***
+
+  ------------- Dec 7, 2025 --------------
+  COMPLETE review and fix rules for removing the forbidden area: because the ships don't keep the gaps between them correctly.
 
 هل المكان اللى بتتحط فيه السفينه هو المكان اللى اختاره اللوجيك اللى كتبته وبناء عليه بيتم تحديد اماكن السفن؟" أيوه"
 ازاى اتغلب على مشكلة السفينه الرأسيه واشيل الفرق فى المسافة ؟"إتغلبت وظبطتها مش عارفة جت ازاى بس جت" وخلاص
@@ -21,9 +33,8 @@ COMPLETE review and fix rules for removing the forbidden area: because the ships
 
 ------------- Tasks from Dec 5, 2025 --------------
 COMPLETE choose random directions for computer gameboard
-TODO filx human gameboard placement after submitting it wwith the computer gameboard
+COMPLETE filx human gameboard placement after submitting it wwith the computer gameboard
 
-TODO keep styles of human ships before removing the div entirely.
 COMPLETE style computer ships responsively
 
 ---

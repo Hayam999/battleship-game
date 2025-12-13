@@ -1,5 +1,8 @@
 import { createUiPlayground, addCircle } from "./ui-logic/create-ui.js";
 import { createArrayOfIndicies } from "./backend-logic/data.js";
+import shootMp3 from "../assets/shoot.mp3";
+import boomMp3 from "../assets/boom.mp3";
+import oceanMp3 from "../assets/ocean.mp3";
 
 /**
  * @purpose Starts playing a complete round
@@ -9,7 +12,28 @@ import { createArrayOfIndicies } from "./backend-logic/data.js";
  */
 
 function play(human, computer) {
+  const oceanSound = new Audio(oceanMp3);
+  let oceanSoundOn = true;
+  oceanSound.play();
+  oceanSound.addEventListener("error", (e) => {
+    console.error("Audio load error:", e);
+    console.error("Error code:", oceanSound.error?.code);
+    console.error("Error message:", oceanSound.error?.message);
+  });
+  oceanSound.addEventListener(
+    "ended",
+    () => {
+      if (oceanSoundOn) {
+        this.currentTime = 0;
+        this.play();
+      }
+    },
+    false,
+  );
+  const shotSound = new Audio(shootMp3);
+  const boomSound = new Audio(boomMp3);
   const ocean = createUiPlayground(human.gameBoard.uiData, computer.uiData);
+
   document.body.appendChild(ocean);
   const winnerHits = 17;
   let humanHits = 0;
@@ -20,24 +44,26 @@ function play(human, computer) {
   const computerWaterBase = computer.rawData;
   const humanWaters = human.gameBoard.uiData;
   const humanWaterBase = human.gameBoard.rawData;
-  addCircle(humanWaters, "cell94", "red");
-  revealShip("submarine");
-
   let humanTurn = true;
   computerWaters.addEventListener("click", (e) => {
     if (humanTurn) {
+      shotSound.currentTime = 0;
+      shotSound.play();
       humanTurn = false;
       const id = e.target.id;
       const index = parseInt(id.substring(4));
       const shot = computerWaterBase.shoot(index);
+      if (shot.hit) {
+        addCircle(computerWaters, "cell" + index, "red");
+      } else {
+        addCircle(computerWaters, "cell" + index, "#56a5eeff");
+      }
       //TODO add shooting audio and setTimeOut until audio finishes
       setTimeout(() => {
         if (!shot.hit) {
-          addCircle(computerWaters, "cell" + index, "#56a5eeff");
           computerTurn();
         } else {
           humanHits++;
-          addCircle(computerWaters, "cell" + index, "red");
           if (shot.isSunk) {
             revealShip(shot.ship);
           }
@@ -57,7 +83,14 @@ function play(human, computer) {
    */
   function computerTurn() {
     const index = guess();
+    boomSound.currentTime = 0;
+    boomSound.play();
     const shot = humanWaterBase.shoot(index);
+    if (shot.hit) {
+      addCircle(humanWaters, "cell" + index, "red");
+    } else {
+      addCircle(humanWaters, "cell" + index, "#56a5eeff");
+    }
     setTimeout(() => {
       if (shot.hit) {
         addCircle(humanWaters, "cell" + index, "red");
@@ -68,7 +101,6 @@ function play(human, computer) {
           computerTurn();
         }
       } else {
-        addCircle(humanWaters, "cell" + index, "#56a5eeff");
         humanTurn = true;
         return;
       }
