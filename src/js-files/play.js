@@ -69,6 +69,7 @@ function play(human, computer) {
   const humanWaterBase = human.gameBoard.rawData;
   let humanTurn = true;
   computerWaters.addEventListener("click", (e) => {
+    declareWinner("computer", human.name);
     const id = e.target.id;
     if (id.startsWith("cell")) {
       if (humanTurn) {
@@ -80,6 +81,9 @@ function play(human, computer) {
         const shot = computerWaterBase.shoot(index);
         if (shot.hit) {
           addCircle(computerWaters, "cell" + index, "red");
+          if (shot.isSunk) {
+            revealShip(shot.ship);
+          }
         } else {
           addCircle(computerWaters, "cell" + index, "#56a5eeff");
         }
@@ -89,9 +93,7 @@ function play(human, computer) {
             computerTurn();
           } else {
             humanHits++;
-            if (shot.isSunk) {
-              revealShip(shot.ship);
-            }
+
             if (humanHits == winnerHits) {
               declareWinner("human");
             } else {

@@ -1,5 +1,8 @@
 import humanLoseImg from "../../assets/humanLose.svg";
 import humanWinImg from "../../assets/humanWin.svg";
+import { getPlayerGameBoard } from "./place-ships";
+import { getComputerData } from "../backend-logic/getComputerData";
+import { play } from "../play";
 const ships = [
   ["carrier", 5],
   ["battleShip", 4],
@@ -280,16 +283,44 @@ export function addCircle(uiGb, cellId, color) {
   canvas.style.zIndex = 3;
 }
 
-export function createFinal(winner) {
+export function createFinal(winner, humanName) {
+  const playAgain = async (humanName) => {
+    const humanGameboard = await getPlayerGameBoard();
+    const human = {
+      name: humanName,
+      gameBoard: {
+        rawData: humanGameboard.rawData,
+        uiData: humanGameboard.uiData,
+      },
+    };
+    const computer = getComputerData();
+    play(human, computer);
+  };
   const parent = document.createElement("div");
   const imgDiv = document.createElement("div");
-  //TODO in this imgDiv i need to add the image according who wins
-  const playAgain = document.createElement("button");
-  playAgain.id = "play-again";
-  playAgain.innerText = "Play Again";
-  playAgain.addEventListener("click", () => {
-    //TODO here we need to start from let human place there ships. and then create new computer ships and then start playing.
-  });
-  parent.append(imgDiv, playAgain);
+  imgDiv.id = "Declare-winner-div-image";
+  const img = document.createElement("img");
+  if (winner == "human") {
+    img.src = humanWinImg;
+    img.alt = "Victorious ship";
+  } else if (winner == "computer") {
+    img.src = humanLoseImg;
+    img.alt = "Wrecked ship";
+  } else {
+    throw new Error("invalid winner");
+  }
+  imgDiv.append(img);
+  const playAgainBtn = document.createElement("button");
+  playAgainBtn.id = "play-again";
+  playAgainBtn.innerText = "Play Again";
+  playAgainBtn.addEventListener(
+    "click",
+    () => {
+      parent.remove();
+      playAgain(humanName);
+    },
+    { once: true },
+  );
+  parent.append(imgDiv, playAgainBtn);
   return parent;
 }
