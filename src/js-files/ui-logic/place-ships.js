@@ -1,8 +1,4 @@
-import {
-  createShips,
-  createGameBoard,
-  createPlacingShipsRules,
-} from "./create-ui.js";
+import { createShips, createGameBoard } from "./create-ui.js";
 import {
   createGameBoard as CreateRawGameBoard,
   shipNames,
@@ -97,15 +93,6 @@ async function getPlayerGameBoard() {
     const shipsAndRulesWrapper = document.createElement("div");
     shipsAndRulesWrapper.id = "ships-n-rules-wrapper";
 
-    // Rules Section
-    const rulesWrapper = document.createElement("div");
-    rulesWrapper.id = "rules-wrapper";
-    const rulesHeader = document.createElement("h3");
-    rulesHeader.id = "rules-header";
-    rulesHeader.innerText = "Drag and Drop each Ship into the Game Board";
-    const rules = createPlacingShipsRules();
-    rulesWrapper.append(rulesHeader, rules);
-
     // Ships Section
     const shipsWrapper = document.createElement("div");
     shipsWrapper.id = "ships-harbour";
@@ -115,7 +102,7 @@ async function getPlayerGameBoard() {
     const ships = createShips("human");
     shipsWrapper.append(shipsHeader, ships);
 
-    shipsAndRulesWrapper.append(rulesWrapper, shipsWrapper);
+    shipsAndRulesWrapper.append(shipsWrapper);
 
     placeShipsDiv.append(gameBoardWrapper, shipsAndRulesWrapper, letsPlay);
     document.body.appendChild(placeShipsDiv);
