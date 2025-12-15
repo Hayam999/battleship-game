@@ -25,6 +25,10 @@ function play(human, computer) {
   const humanLoseSound = new Audio(humanLoseMp3);
   const humanWinSound = new Audio(humanWinMp3);
   const radioSound = new Audio(radioMp3);
+  radioSound.volume = 0.2;
+  oceanSound.volume = 0.5;
+  shotSound.volume = 0.5;
+  boomSound.volume = 0.5;
   let oceanSoundOn = true;
   oceanSound.play();
   radioSound.play();
@@ -69,7 +73,6 @@ function play(human, computer) {
   const humanWaterBase = human.gameBoard.rawData;
   let humanTurn = true;
   computerWaters.addEventListener("click", (e) => {
-    declareWinner("computer", human.name);
     const id = e.target.id;
     if (id.startsWith("cell")) {
       if (humanTurn) {
@@ -87,7 +90,6 @@ function play(human, computer) {
         } else {
           addCircle(computerWaters, "cell" + index, "#56a5eeff");
         }
-        //TODO add shooting audio and setTimeOut until audio finishes
         setTimeout(() => {
           if (!shot.hit) {
             computerTurn();
@@ -95,7 +97,7 @@ function play(human, computer) {
             humanHits++;
 
             if (humanHits == winnerHits) {
-              declareWinner("human");
+              declareWinner("human", human.name);
             } else {
               humanTurn = true;
             }
@@ -123,7 +125,7 @@ function play(human, computer) {
       if (shot.hit) {
         computerHits++;
         if (computerHits == winnerHits) {
-          declareWinner(computer);
+          declareWinner(computer, human.name);
         } else {
           computerTurn();
         }
@@ -134,9 +136,9 @@ function play(human, computer) {
     }, 1000);
   }
 
-  function declareWinner(winner) {
+  function declareWinner(winner, humanName) {
     ocean.remove();
-    const finalScene = createFinal(winner);
+    const finalScene = createFinal(winner, humanName);
     document.body.append(finalScene);
     if (winner == "human") {
       humanWinSound.play();

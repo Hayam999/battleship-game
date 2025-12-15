@@ -1,7 +1,23 @@
 ---------------- Dec 13, 2025 --------------
+TODO add guide lines for player
+TODO add needed content for ocean div
+TODO Modify placeShipsDiv styling
+TODO add Mute button
+TODO turn down the radio sound
+TODO style the whole game properly
 
-TODO limit evenListener to only responds if we clicked a not shooted cell before
-FIX problem when setting radio sound to currentTime = 0;
+
+
+
+
+
+
+---
+
+---------- Dec 13, 2025 --------------
+
+COMPLETE limit evenListener to only responds if we clicked a not shooted cell before
+COMPLETE FIX problem when setting radio sound to currentTime = 0;
 
 ---
 

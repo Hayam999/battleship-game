@@ -237,8 +237,6 @@ button#cancel-name:hover {
   background-color: #2e90a6;
 }
 
-/* TODO style #place-ships-div*/
-
 #place-ships-div {
   display: flex;
   justify-content: space-between;
