@@ -1,6 +1,7 @@
 import humanLoseImg from "../../assets/humanLose.svg";
 import humanWinImg from "../../assets/humanWin.svg";
 import soundIconSvg from "../../assets/soundIcon.svg";
+import gunPointer from "../../assets/gun-target-icon.png";
 
 import { getPlayerGameBoard } from "./place-ships";
 import { getComputerData } from "../backend-logic/getComputerData";
@@ -279,11 +280,16 @@ export function createUiPlayground(humanGb, computerGb) {
   ocean.appendChild(soundIconDiv);
 
   const friendlyWaters = document.createElement("div");
+  const friendlyWatersHeader = document.createElement("h4");
+  friendlyWatersHeader.innerText = "Friendly Waters";
   friendlyWaters.id = "friendly-waters";
   const enemyWaters = document.createElement("div");
+  const enemyWatersHeader = document.createElement("h4");
+  enemyWatersHeader.innerText = "Enemy Waters";
   enemyWaters.id = "enemy-waters";
-  friendlyWaters.appendChild(humanGb);
-  enemyWaters.appendChild(computerGb);
+  enemyWaters.style.cursor = `url(${gunPointer}), crosshair`;
+  friendlyWaters.append(friendlyWatersHeader, humanGb);
+  enemyWaters.append(enemyWatersHeader, computerGb);
 
   const battlespace = document.createElement("div");
   battlespace.id = "battlespace";

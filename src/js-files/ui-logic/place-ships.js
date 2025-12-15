@@ -44,8 +44,6 @@ function getComputerGameBoard(gb) {
  * -------------------- Human GameBoard --------------------
  */
 
-// -------------------------------------------------- \\
-
 async function getPlayerGameBoard() {
   const gameBoardTable = CreateRawGameBoard();
   let placementController = null;
@@ -126,6 +124,7 @@ async function getPlayerGameBoard() {
   function reviveShips(signal) {
     const placeShipsDiv = document.getElementById("place-ships-div");
     const shipsDiv = document.getElementById("ships-div");
+    placeShipsDiv.style.cursor = "grab";
     let isDragging = false;
     let draggedShip;
     let draggedShipName;
@@ -140,6 +139,7 @@ async function getPlayerGameBoard() {
 
         if (parent) {
           isDragging = true;
+          shipsDiv.style.cursor = "grabbing";
           draggedShip = parent;
           const rect = parent.getBoundingClientRect();
           offsetX = e.clientX - rect.left;
@@ -179,6 +179,7 @@ async function getPlayerGameBoard() {
         event.preventDefault();
 
         if (isDragging) {
+          shipsDiv.style.cursor = "grab";
           const gameBoardRec = gameBoard.getBoundingClientRect();
           if (
             event.clientX >= gameBoardRec.left &&

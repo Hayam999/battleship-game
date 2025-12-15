@@ -2,8 +2,8 @@
 TODO add guide lines for player
 TODO add needed content for ocean div
 TODO Modify placeShipsDiv styling
-TODO add Mute button
-TODO turn down the radio sound
+COMPLETE add Mute button
+COMPLETE turn down the radio sound
 TODO style the whole game properly
 
 
