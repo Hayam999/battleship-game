@@ -1,8 +1,11 @@
 import humanLoseImg from "../../assets/humanLose.svg";
 import humanWinImg from "../../assets/humanWin.svg";
+import soundIconSvg from "../../assets/soundIcon.svg";
+
 import { getPlayerGameBoard } from "./place-ships";
 import { getComputerData } from "../backend-logic/getComputerData";
 import { play } from "../play";
+
 const ships = [
   ["carrier", 5],
   ["battleShip", 4],
@@ -243,6 +246,37 @@ export function createUiPlayground(humanGb, computerGb) {
   const header = document.createElement("h1");
   header.id = "battlespace-header";
   header.innerText = "Battleship";
+  const soundIcon = document.createElement("img");
+  const soundIconDiv = document.createElement("div");
+  soundIcon.src = soundIconSvg;
+  soundIcon.alt = "Mute sound";
+  soundIcon.style.width = "2.5vw";
+  soundIcon.style.height = "2.5vw";
+  soundIconDiv.style.position = "fixed";
+  soundIconDiv.style.bottom = "2%";
+  soundIconDiv.style.right = "2%";
+  soundIconDiv.style.cursor = "pointer";
+  soundIconDiv.id = "sound-icon-div";
+
+  const canvas = document.createElement("canvas");
+  const canvaSize = parseFloat(cellSize) * (window.innerWidth / 100);
+  canvas.width = canvaSize;
+  canvas.height = canvaSize;
+  const ctx = canvas.getContext("2d");
+  ctx.strokeStyle = "black";
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(0, canvaSize);
+  ctx.lineTo(canvaSize, 0);
+  ctx.stroke();
+  canvas.style.position = "absolute";
+  canvas.style.top = "0";
+  canvas.style.left = "0";
+  canvas.id = "mute-line";
+  canvas.style.visibility = "hidden";
+  canvas.style.zIndex = 3;
+  soundIconDiv.append(canvas, soundIcon);
+  ocean.appendChild(soundIconDiv);
 
   const friendlyWaters = document.createElement("div");
   friendlyWaters.id = "friendly-waters";
@@ -263,7 +297,6 @@ export function addCircle(uiGb, cellId, color) {
   console.log(cellId);
   const cell = uiGb.querySelector("#" + cellId);
   const canvas = document.createElement("canvas");
-
   const canvaSize = parseFloat(cellSize) * (window.innerWidth / 100);
   const ctx = canvas.getContext("2d");
   canvas.width = canvaSize;
@@ -323,4 +356,13 @@ export function createFinal(winner, humanName) {
   );
   parent.append(imgDiv, playAgainBtn);
   return parent;
+}
+
+export function addMuteLine(soundDiv) {
+  const canvas = soundDiv.querySelector("#mute-line");
+  canvas.style.visibility = "visible";
+}
+export function removeMuteLine(soundDiv) {
+  const canvas = soundDiv.querySelector("#mute-line");
+  canvas.style.visibility = "hidden";
 }

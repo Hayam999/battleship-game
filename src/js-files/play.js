@@ -2,6 +2,8 @@ import {
   createUiPlayground,
   addCircle,
   createFinal,
+  addMuteLine,
+  removeMuteLine,
 } from "./ui-logic/create-ui.js";
 import { createArrayOfIndicies } from "./backend-logic/data.js";
 import shootMp3 from "../assets/shoot.mp3";
@@ -59,9 +61,25 @@ function play(human, computer) {
   );
 
   /*********/
-
   const ocean = createUiPlayground(human.gameBoard.uiData, computer.uiData);
   document.body.appendChild(ocean);
+  const soundIconDiv = document.getElementById("sound-icon-div");
+  soundIconDiv.addEventListener("click", () => {
+    if (oceanSoundOn) {
+      addMuteLine(soundIconDiv);
+      oceanSoundOn = false;
+      oceanSound.pause();
+      radioSound.pause();
+      oceanSound.currentTime = 0;
+      radioSound.currentTime = 0;
+    } else {
+      removeMuteLine(soundIconDiv);
+      oceanSoundOn = true;
+      oceanSound.play();
+      radioSound.play();
+    }
+  });
+
   const winnerHits = 17;
   let humanHits = 0;
   let computerHits = 0;
