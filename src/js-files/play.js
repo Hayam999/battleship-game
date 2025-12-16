@@ -13,6 +13,7 @@ import oceanMp3 from "../assets/ocean.mp3";
 import humanLoseMp3 from "../assets/humanLose.mp3";
 import humanWinMp3 from "../assets/humanWin.mp3";
 import radioMp3 from "../assets/radio.mp3";
+import infoSvg from "../assets/info-circle-icon.svg";
 
 /**
  * @purpose Starts playing a complete round

@@ -2,6 +2,7 @@ import humanLoseImg from "../../assets/humanLose.svg";
 import humanWinImg from "../../assets/humanWin.svg";
 import soundIconSvg from "../../assets/soundIcon.svg";
 import gunPointer from "../../assets/gun-target-icon.png";
+import infoSvg from "../../assets/info-circle-icon.svg";
 
 import { getPlayerGameBoard } from "./place-ships";
 import { getComputerData } from "../backend-logic/getComputerData";
@@ -241,6 +242,7 @@ export function createUiPlayground(humanGb, computerGb) {
   header.innerText = "Battleship";
   const soundIcon = document.createElement("img");
   const soundIconDiv = document.createElement("div");
+
   soundIcon.src = soundIconSvg;
   soundIcon.alt = "Mute sound";
   soundIcon.style.width = "2.5vw";
@@ -269,7 +271,19 @@ export function createUiPlayground(humanGb, computerGb) {
   canvas.style.visibility = "hidden";
   canvas.style.zIndex = 3;
   soundIconDiv.append(canvas, soundIcon);
-  ocean.appendChild(soundIconDiv);
+  const info = document.createElement("img");
+  info.src = infoSvg;
+  info.alt = "click for more information";
+  info.style.cursor = "pointer";
+  info.style.width = "2.5vw";
+  info.style.height = "2.5vw";
+  info.style.position = "fixed";
+  info.style.left = "2%";
+  info.style.bottom = "2%";
+  info.addEventListener("click", () => {
+    todoPopUp();
+  });
+  ocean.append(soundIconDiv, info);
 
   const friendlyWaters = document.createElement("div");
   const friendlyWatersHeader = document.createElement("h4");
