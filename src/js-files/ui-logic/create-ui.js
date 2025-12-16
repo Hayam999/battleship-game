@@ -364,3 +364,12 @@ export function removeMuteLine(soundDiv) {
   const canvas = soundDiv.querySelector("#mute-line");
   canvas.style.visibility = "hidden";
 }
+
+export function todoPopUp() {
+  const popUp = document.getElementById("pop-up-instructions");
+  const cancelBtn = document.getElementById("close-pop-up");
+  popUp.showModal();
+  cancelBtn.addEventListener("click", () => {
+    popUp.close();
+  });
+}

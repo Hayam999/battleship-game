@@ -4,6 +4,7 @@ import {
   createFinal,
   addMuteLine,
   removeMuteLine,
+  todoPopUp,
 } from "./ui-logic/create-ui.js";
 import { createArrayOfIndicies } from "./backend-logic/data.js";
 import shootMp3 from "../assets/shoot.mp3";
@@ -21,6 +22,7 @@ import radioMp3 from "../assets/radio.mp3";
  */
 
 function play(human, computer) {
+  todoPopUp();
   const oceanSound = new Audio(oceanMp3);
   const shotSound = new Audio(shootMp3);
   const boomSound = new Audio(boomMp3);
