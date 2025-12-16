@@ -20,18 +20,20 @@ body {
   line-height: 1.5;
   /* 4. Improve text rendering */
   -webkit-font-smoothing: antialiased;
-  background: linear-gradient(
-    135deg,
-    rgba(83, 109, 254, 0.7),
-    /* Soft blue */ rgba(255, 107, 129, 0.7) /* Soft pink */
-  );
 }
 html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
   width: 100%;
+  height: 100%;
+  background-color: hsl(40, 100%, 97%);
+  box-shadow:
+    0 0 10px hsla(0, 0%, 100%, 0.8),
+    0 0 20px hsla(0, 0%, 100%, 0.6),
+    0 0 30px hsla(0, 0%, 100%, 0.4);
+  /* Optional: animation */
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* 5. Improve media defaults */
@@ -84,33 +86,27 @@ h6 {
   isolation: isolate;
 }
 
-/* Base container */
-.game-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
-  max-height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-/* Full-screen background image */
-.full-size-image-container {
-  display: flex;
-  width: 80%;
-  height: 80%;
+#background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
 }
-.full-size-image-container img {
-  max-width: 100%;
+
+#background-container picture {
+  width: 100%;
   height: 100%;
+  display: block;
 }
 
-.full-size-image {
-  flex: 1;
+#background-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
-
 /* Loading bar styling - positioned in the lower third */
 .loading-container {
   position: absolute;
@@ -147,34 +143,32 @@ h6 {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-/* Start button - will replace loading bar */
 .start-button-container {
   position: absolute;
-  bottom: 3%; /* Same position as loading bar */
+  bottom: 3%;
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
   max-width: 500px;
   text-align: center;
   z-index: 2;
-  display: none; /* Hidden initially */
+  display: none;
 }
 
 .start-button {
   width: 100%;
   padding: 15px 0;
   font-size: 24px;
-  background-color: #ff5722; /* Orange button */
+  background-color: #f1592b;
   color: white;
   border: none;
-  border-radius: 30px; /* More rounded edges */
+  border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
-
 .start-button:hover {
-  background-color: #e64a19; /* Darker orange on hover */
+  background-color: #e64a19;
   transform: scale(1.02);
 }
 
@@ -185,35 +179,30 @@ h6 {
   border: none;
   border-radius: 10px;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-  width: 25%;
-  height: 20%;
   text-align: center;
+  padding: 1vw;
+  padding-bottom: 5vw;
 }
 
 /* Fieldset inside the dialog */
-#name-fieldset {
-  border: none;
-  padding: 0;
-}
 
 /* Style the label */
 label {
   display: block;
-  font-size: 1.5rem;
   font-weight: bold;
   color: #194e5a;
-  margin-bottom: 10px;
+  margin-bottom: 0.5vw;
+  padding: 0.5vw;
 }
 
 /* Input field styling */
 input {
-  width: 100%;
-  height: 25%;
+  width: 75%;
   border: 2px solid #f29544;
   padding: 10px;
-  border-radius: 10px;
+  margin: 0.5vw;
+  border-radius: 5px;
   outline: none;
-  font-size: 1.4rem;
   color: #0e2e36;
 }
 
@@ -222,7 +211,6 @@ button#cancel-name {
   font-size: smaller;
   border: none;
   background-color: #52dfff;
-
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;

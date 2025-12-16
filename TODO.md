@@ -1,9 +1,7 @@
 ---------------- Dec 13, 2025 --------------
-TODO add guide lines for player
-TODO add needed content for ocean div
-TODO Modify placeShipsDiv styling
 COMPLETE add Mute button
 COMPLETE turn down the radio sound
+COMPLETE create instructions pop-up and view it after clicking let's play and then hide it but keep a button to keep showing it when player needs to.
 TODO style the whole game properly
 
 

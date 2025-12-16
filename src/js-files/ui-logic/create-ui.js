@@ -275,8 +275,8 @@ export function createUiPlayground(humanGb, computerGb) {
   info.src = infoSvg;
   info.alt = "click for more information";
   info.style.cursor = "pointer";
-  info.style.width = "2.5vw";
-  info.style.height = "2.5vw";
+  info.style.width = "2.1vw";
+  info.style.height = "2.1vw";
   info.style.position = "fixed";
   info.style.left = "2%";
   info.style.bottom = "2%";

@@ -6,41 +6,69 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="game-container">
-      <!-- Game background image -->
-      <div class="full-size-image-container" id="background-container">
+    <div id="background-container">
+      <picture>
         <img
-          src="./images/loading.png"
-          alt="Game Background"
-          class="full-size-image"
+          sizes="(max-width: 1024px) 100vw, 1024px"
+          srcset="
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_200.png   200w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_281.png   281w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_348.png   348w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_407.png   407w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_460.png   460w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_510.png   510w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_559.png   559w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_604.png   604w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_644.png   644w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_688.png   688w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_730.png   730w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_766.png   766w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_803.png   803w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_841.png   841w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_877.png   877w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_911.png   911w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_946.png   946w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_980.png   980w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_1014.png 1014w,
+            ./assets/loading-image-versions/loading_j75n19_c_scale,w_1024.png 1024w
+          "
+          src="./assets/loading-image-versions/loading_j75n19_c_scale,w_1024.png"
+          alt=""
         />
-      </div>
-
-      <!-- Loading bar (positioned at lower middle) -->
-      <div class="loading-container">
-        <div class="loading-bar-container">
-          <div class="loading-bar"></div>
-        </div>
-        <div class="loading-text">
-          Loading: <span class="loading-percentage">0%</span>
-        </div>
-      </div>
-
-      <!-- Start button (hidden initially, will replace loading bar) -->
-      <div class="start-button-container">
-        <button class="start-button">Start Game</button>
-      </div>
-      <dialog id="name-dialog">
-        <fieldset id="name-fieldset" method="dialog">
-          <button type="button" id="cancel-name">X</button>
-          <label for="player-name">Enter your name</label>
-          <input type="text" id="player-name" autofocus />
-        </fieldset>
-      </dialog>
-      <dialog id="pop-up-instructions">
-        <h3>Shoot the enemy waters to sink their hidden ships</h3>
-        <button id="close-pop-up">Close</button>
-      </dialog>
+      </picture>
     </div>
+
+    <div class="loading-container">
+      <div class="loading-bar-container">
+        <div class="loading-bar"></div>
+      </div>
+      <div class="loading-text">
+        Loading: <span class="loading-percentage">0%</span>
+      </div>
+    </div>
+    <div class="start-button-container">
+      <button
+        class="start-button"
+        class="w-full py-4 text-2xl bg-orange-600 text-white rounded-full hover:bg-orange-700 hover:scale-105 transition-all duration-300 shadow-lg"
+      >
+        Start Game
+      </button>
+    </div>
+    <dialog id="name-dialog">
+      <fieldset id="name-fieldset" method="dialog">
+        <button type="button" id="cancel-name">X</button>
+        <label for="player-name">Enter your name</label>
+        <input type="text" id="player-name" autofocus />
+      </fieldset>
+    </dialog>
+    <dialog id="pop-up-instructions">
+      <h3>Shoot the enemy waters to sink their hidden ships</h3>
+      <button
+        id="close-pop-up"
+        class="bg-[--color-coral] hover:bg-[--color-button-hover] transition-all duration-300 rounded-lg px-4 py-2 shadow-lg"
+      >
+        Close
+      </button>
+    </dialog>
   </body>
 </html>

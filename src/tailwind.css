@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Custom theme for your project colors */
+@theme {
+  --color-ocean-dark: #0e2e36;
+  --color-ocean-medium: #194e5a;
+  --color-ocean-light: #52dfff;
+  --color-coral: #f28241;
+  --color-coral-light: #f29544;
+  --color-blue-gradient-start: #0b85db;
+  --color-blue-gradient-end: #82addb;
+  --color-button-hover: #e64a19;
+  --color-button-primary: hsl(16, 67%, 44%);
+}

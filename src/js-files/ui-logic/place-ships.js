@@ -43,9 +43,11 @@ function getComputerGameBoard(gb) {
 async function getPlayerGameBoard() {
   const gameBoardTable = CreateRawGameBoard();
   let placementController = null;
+  const letsPlayDiv = document.createElement("div");
   const letsPlay = document.createElement("button");
   letsPlay.id = "lets-play";
   letsPlay.innerText = "Let's Play";
+  letsPlayDiv.append(letsPlay);
   const placeShipsDiv = document.createElement("div");
   placeShipsDiv.id = "place-ships-div";
   const gameBoard = createGameBoard();
@@ -106,7 +108,7 @@ async function getPlayerGameBoard() {
 
     shipsAndRulesWrapper.append(shipsWrapper);
 
-    placeShipsDiv.append(gameBoardWrapper, shipsAndRulesWrapper, letsPlay);
+    placeShipsDiv.append(gameBoardWrapper, shipsAndRulesWrapper, letsPlayDiv);
     document.body.appendChild(placeShipsDiv);
   }
 
