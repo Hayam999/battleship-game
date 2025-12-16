@@ -215,19 +215,11 @@ export function createTurnBtn() {
   const btn = document.createElement("button");
   btn.className = "turn-ship";
 
-  const svg = document.createElement("div");
-  svg.className = "turn-ship-svg";
-
   // Set the text content using a text node instead
   const textNode = document.createTextNode("Rotate");
   textNode.id = "rotate";
-
-  // Add both elements to the button
   btn.appendChild(textNode);
-  btn.appendChild(svg);
-
   return btn;
-  // [x]!!! style btn and make svg visible;
 }
 export function createGameRules() {
   const gameRules = document.createElement("div");

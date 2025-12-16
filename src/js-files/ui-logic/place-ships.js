@@ -99,8 +99,10 @@ async function getPlayerGameBoard() {
     const shipsHeader = document.createElement("h3");
     shipsHeader.id = "ships-header";
     shipsHeader.innerText = "Ships";
+    const advice = document.createElement("h5");
+    advice.innerText = "drag and drop ships into the gameboard";
     const ships = createShips("human");
-    shipsWrapper.append(shipsHeader, ships);
+    shipsWrapper.append(shipsHeader, advice, ships);
 
     shipsAndRulesWrapper.append(shipsWrapper);
 
