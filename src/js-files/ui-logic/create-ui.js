@@ -9,11 +9,12 @@ import { getComputerData } from "../backend-logic/getComputerData";
 import { play } from "../play";
 
 const ships = [
-  ["carrier", 5],
-  ["battleShip", 4],
-  ["cruiser", 3],
-  ["submarine", 3],
   ["destroy", 2],
+  ["submarine", 3],
+
+  ["cruiser", 3],
+  ["battleShip", 4],
+  ["carrier", 5],
 ];
 
 const cellSize = getComputedStyle(document.documentElement)
@@ -59,16 +60,15 @@ function createHumanShip(name, numOfCells) {
 
   const shipName = document.createElement("div");
   shipName.className = "ship-name";
-  shipName.innerText = name + ": x" + numOfCells.toString();
+  shipName.innerText = name;
   nameAndBtn.appendChild(shipName);
 
   const turnBtn = createTurnBtn();
   turnBtn.id = "turn " + name;
-  nameAndBtn.appendChild(turnBtn);
 
-  shipCover.appendChild(nameAndBtn);
   const shipContainer = createShip(name, numOfCells, true);
-  shipCover.appendChild(shipContainer);
+  shipCover.append(nameAndBtn, shipContainer, turnBtn);
+
   return shipCover;
 }
 

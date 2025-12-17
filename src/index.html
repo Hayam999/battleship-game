@@ -56,19 +56,17 @@
     </div>
     <dialog id="name-dialog">
       <fieldset id="name-fieldset" method="dialog">
-        <button type="button" id="cancel-name">X</button>
         <label for="player-name">Enter your name</label>
         <input type="text" id="player-name" autofocus />
       </fieldset>
     </dialog>
     <dialog id="pop-up-instructions">
-      <h3>Shoot the enemy waters to sink their hidden ships</h3>
-      <button
-        id="close-pop-up"
-        class="bg-[--color-coral] hover:bg-[--color-button-hover] transition-all duration-300 rounded-lg px-4 py-2 shadow-lg"
-      >
-        Close
-      </button>
+      <div id="pop-up-wrapper">
+        <h3 id="pop-up-header">
+          Shoot the enemy waters to sink their hidden ships
+        </h3>
+        <button id="close-pop-up">Close</button>
+      </div>
     </dialog>
   </body>
 </html>

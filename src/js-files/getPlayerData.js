@@ -73,16 +73,12 @@ async function getPlayerData() {
   async function getPlayerName() {
     return new Promise((resolve) => {
       const nameDialog = document.getElementById("name-dialog");
-      const cancelNamebtn = document.getElementById("cancel-name");
+
       const inputField = document.getElementById("player-name");
       backgroundDiv.style.display = "none";
       document.body.style.backgroundColor = "#2E90A6";
       nameDialog.showModal();
-      cancelNamebtn.addEventListener("click", () => {
-        inputField.value = "";
-        nameDialog.close();
-        resolve(null);
-      });
+
       inputField.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
           e.preventDefault();

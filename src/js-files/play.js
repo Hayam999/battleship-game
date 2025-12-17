@@ -23,6 +23,7 @@ import radioMp3 from "../assets/radio.mp3";
 
 function play(human, computer) {
   todoPopUp();
+
   const oceanSound = new Audio(oceanMp3);
   const shotSound = new Audio(shootMp3);
   const boomSound = new Audio(boomMp3);
@@ -36,11 +37,6 @@ function play(human, computer) {
   let oceanSoundOn = true;
   oceanSound.play();
   radioSound.play();
-  oceanSound.addEventListener("error", (e) => {
-    console.error("Audio load error:", e);
-    console.error("Error code:", oceanSound.error?.code);
-    console.error("Error message:", oceanSound.error?.message);
-  });
   oceanSound.addEventListener(
     "ended",
     () => {
@@ -103,12 +99,12 @@ function play(human, computer) {
         const index = parseInt(id.substring(4));
         const shot = computerWaterBase.shoot(index);
         if (shot.hit) {
-          addCircle(computerWaters, "cell" + index, "red");
+          addCircle(computerWaters, "cell" + index, "#EF0307");
           if (shot.isSunk) {
             revealShip(shot.ship);
           }
         } else {
-          addCircle(computerWaters, "cell" + index, "#56a5eeff");
+          addCircle(computerWaters, "cell" + index, "#00A8CC");
         }
         setTimeout(() => {
           if (!shot.hit) {
@@ -117,6 +113,8 @@ function play(human, computer) {
             humanHits++;
 
             if (humanHits == winnerHits) {
+              oceanSound.pause();
+              radioSound.pause();
               declareWinner("human", human.name);
             } else {
               humanTurn = true;
@@ -137,14 +135,16 @@ function play(human, computer) {
     boomSound.play();
     const shot = humanWaterBase.shoot(index);
     if (shot.hit) {
-      addCircle(humanWaters, "cell" + index, "red");
+      addCircle(humanWaters, "cell" + index, "#EF0307");
     } else {
-      addCircle(humanWaters, "cell" + index, "#56a5eeff");
+      addCircle(humanWaters, "cell" + index, "#00A8CC");
     }
     setTimeout(() => {
       if (shot.hit) {
         computerHits++;
         if (computerHits == winnerHits) {
+          oceanSound.pause();
+          radioSound.pause();
           declareWinner(computer, human.name);
         } else {
           computerTurn();

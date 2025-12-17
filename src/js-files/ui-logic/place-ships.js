@@ -44,8 +44,10 @@ async function getPlayerGameBoard() {
   const gameBoardTable = CreateRawGameBoard();
   let placementController = null;
   const letsPlayDiv = document.createElement("div");
+  letsPlayDiv.className = "lets-play-container";
   const letsPlay = document.createElement("button");
   letsPlay.id = "lets-play";
+  letsPlay.className = "lets-play-btn";
   letsPlay.innerText = "Let's Play";
   letsPlayDiv.append(letsPlay);
   const placeShipsDiv = document.createElement("div");
@@ -59,7 +61,7 @@ async function getPlayerGameBoard() {
     reviveShips(placementController.signal);
 
     const result = await new Promise((resolve) => {
-      letsPlay.addEventListener("click", () => {
+      letsPlayDiv.addEventListener("click", () => {
         if (gameBoardTable.humanPlacedAllShips()) {
           cleanupPlacementListeners(placementController);
           const uiShips = createShips("computer");
@@ -72,6 +74,7 @@ async function getPlayerGameBoard() {
             positionUiShip(currentRawShip, currentUiShip, uiGb);
           });
           placeShipsDiv.remove();
+          letsPlayDiv.remove();
           resolve({ rawData: gameBoardTable, uiData: uiGb });
         }
       });
@@ -108,8 +111,11 @@ async function getPlayerGameBoard() {
 
     shipsAndRulesWrapper.append(shipsWrapper);
 
-    placeShipsDiv.append(gameBoardWrapper, shipsAndRulesWrapper, letsPlayDiv);
-    document.body.appendChild(placeShipsDiv);
+    placeShipsDiv.append(gameBoardWrapper, shipsAndRulesWrapper);
+    const wrapper = document.createElement("div");
+    wrapper.id = "placing-ships-wrapper";
+    wrapper.append(placeShipsDiv, letsPlayDiv);
+    document.body.appendChild(wrapper);
   }
 
   function reviveShips(signal) {
@@ -241,8 +247,8 @@ async function getPlayerGameBoard() {
               shipData.dir = "v";
 
               ship.style.position = "relative";
-              ship.style.top = "100%";
-              ship.style.left = "100%";
+              ship.style.top = "0";
+              ship.style.left = "0";
               ship.style.transformOrigin = "center";
               ship.style.zIndex = "1";
             }
