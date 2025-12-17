@@ -250,13 +250,11 @@ input {
 #gameBoard-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
 }
 
 #gameBoard-header {
-  text-align: center;
-  align-self: center;
-  padding-bottom: 1vh;
+  text-align: left;
+  align-self: flex-end;
 }
 
 #rules-header,
@@ -296,7 +294,7 @@ input {
   display: flex;
   gap: 0.5em;
   flex-direction: column;
-  padding: 0.5em;
+  padding: 0.8em 0.8em 0.8em 0;
   position: relative;
 }
 
@@ -426,4 +424,11 @@ input {
 #Declare-winner-div-image img {
   padding-top: 1vw;
   padding-bottom: 1vw;
+}
+
+#ships-harbour {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--cell-width);
 }
