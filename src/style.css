@@ -437,3 +437,7 @@ input {
   align-items: flex-start;
   gap: var(--cell-width);
 }
+
+#lets-play {
+  cursor: pointer;
+}
