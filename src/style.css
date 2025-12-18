@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "changa_oneregular";
+  src: url("./assets/change-one-font/changaone-regular-webfont.woff2")
+    format("woff2");
+
+  font-display: swap;
+}
+
 :root {
   --cell-width: 3.3vw;
   --cell-height: 3.3vw;
@@ -34,6 +42,8 @@ body {
     0 0 30px hsla(0, 0%, 100%, 0.4);
   /* Optional: animation */
   animation: pulse-glow 2s ease-in-out infinite;
+  font-family: "changa_oneregular";
+  font-size: 16px;
 }
 
 /* 5. Improve media defaults */
@@ -139,7 +149,6 @@ h6 {
 
 .loading-text {
   color: white;
-  font-size: 16px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
@@ -158,7 +167,6 @@ h6 {
 .start-button {
   width: 100%;
   padding: 15px 0;
-  font-size: 24px;
   background-color: #f1592b;
   color: white;
   border: none;
@@ -189,7 +197,6 @@ h6 {
 /* Style the label */
 label {
   display: block;
-  font-weight: bold;
   color: #194e5a;
   margin-bottom: 0.5vw;
   padding: 0.5vw;
@@ -226,7 +233,6 @@ input {
   grid-template-rows: repeat(11, var(--cell-height));
   gap: var(--cell-gap);
   border-radius: 10px;
-  font-size: 0.8rem;
 }
 
 .cell {
@@ -262,10 +268,9 @@ input {
   padding-bottom: 1vw;
 }
 .turn-ship {
-  max-width: 3rem;
-  font-size: 0.5rem;
+  max-width: fit-content;
   margin: 0;
-  padding: 5px 0;
+  padding: 0.5em;
   background-color: #f1592b;
   color: white;
   border: none;
@@ -325,9 +330,9 @@ input {
 .lets-play-container,
 #play-again {
   position: absolute;
+  font-size: 1.5rem;
   right: 5%;
   bottom: 5%;
-  font-size: 1.3rem;
   margin: 0;
   padding: 0.8em;
   background-color: #f1592b;
