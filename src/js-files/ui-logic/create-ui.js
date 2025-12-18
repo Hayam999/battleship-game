@@ -11,7 +11,6 @@ import { play } from "../play";
 const ships = [
   ["destroy", 2],
   ["submarine", 3],
-
   ["cruiser", 3],
   ["battleShip", 4],
   ["carrier", 5],
@@ -306,7 +305,6 @@ export function createUiPlayground(humanGb, computerGb) {
 }
 
 export function addCircle(uiGb, cellId, color) {
-  console.log(cellId);
   const cell = uiGb.querySelector("#" + cellId);
   const canvas = document.createElement("canvas");
   const canvaSize = parseFloat(cellSize) * (window.innerWidth / 100);

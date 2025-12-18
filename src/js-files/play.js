@@ -145,7 +145,7 @@ function play(human, computer) {
         if (computerHits == winnerHits) {
           oceanSound.pause();
           radioSound.pause();
-          declareWinner(computer, human.name);
+          declareWinner("computer", human.name);
         } else {
           computerTurn();
         }

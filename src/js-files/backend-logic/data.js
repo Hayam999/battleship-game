@@ -342,9 +342,6 @@ function GameBoard(ships) {
       const x = ship.pos["x"];
       const y = ship.pos["y"];
       const d = ship.dir;
-      console.log(
-        `----------addComputerShip------------- \n x: ${x}, y:${y}, index: ${ship.index}`,
-      );
       for (let i = 0; i < ship.length; i++) {
         let cell;
         if (d == "v") {
