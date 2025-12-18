@@ -7,7 +7,7 @@
     "watch": "jest --watch *.js",
     "watch-all": "jest --watchAll",
     "start": "webpack serve --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js --mode production",
     "testEnvironment": "jsdom"
   },
   "repository": {
@@ -23,15 +23,15 @@
   "homepage": "https://github.com/Hayam999/battleship-game#readme",
   "description": "",
   "devDependencies": {
-    "@babel/core": "^7.26.10",
-    "@babel/preset-env": "^7.26.9",
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
     "@tailwindcss/postcss": "^4.1.18",
     "autoprefixer": "^10.4.23",
     "babel-jest": "^29.7.0",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
     "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.6.3",
+    "html-webpack-plugin": "^5.6.5",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
@@ -39,7 +39,7 @@
     "postcss-loader": "^8.2.0",
     "style-loader": "^4.0.0",
     "tailwindcss": "^4.1.18",
-    "webpack": "^5.98.0",
+    "webpack": "^5.104.0",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
     "webpack-merge": "^6.0.1"
